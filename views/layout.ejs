@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./javascripts/bootstrap.bundle.min.js"></script>
+    <script src="./javascripts/jquery.min.js"></script>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel='stylesheet' href='./stylesheets/style.css' />
+  </head>
+  <body>
+  <header class="navbar navbar-expand-lg navbar-light bg-light" id="navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">홈</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/manager">스키마 관리</a>
+        </li>        
+        <li class="nav-item">
+          <a class="nav-link" href="/analyzer">다양성 검사</a>
+        </li>        
+        <li class="nav-item">
+          <a class="nav-link" href="/result">정확성 검사</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/report">레포트 출력</a>
+        </li>
+      </ul>
+    </div>
+  </header>
+  <main class="bd-content" role="main">
+    <div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+        <%- body %> 
+    </div>
+    </div>
+  </main>
+  <%- script %>
+  <%- style %>
+  </body> 
+
+</html>
+

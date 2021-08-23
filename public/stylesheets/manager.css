@@ -1,0 +1,38 @@
+#manager {
+  position: relative; }
+  #manager .mode {
+    position: absolute;
+    top: 10px;
+    left: 10px; }
+  #manager form label {
+    display: none; }
+  #manager #validate_logs_sum .modal-header .modal-count {
+    position: absolute;
+    right: 60px; }
+  #manager .handleJson .template_elector .btn {
+    border: 1px solid #bcbcbc;
+    margin: 15px 10px 15px 0; }
+  #manager .handleJson .jsonEditor .btn {
+    display: inline-block;
+    padding: 10px 15px; }
+  #manager .handleJson .jsonEditor .editor {
+    display: flex; }
+    #manager .handleJson .jsonEditor .editor .textarea {
+      display: inline-block;
+      width: 50%;
+      height: 800px;
+      border: 1px solid #ddd; }
+  #manager .handleJson .jsonEditor .uploadForm .form-group {
+    position: relative;
+    overflow: hidden;
+    display: inline-block; }
+  #manager .handleJson .jsonEditor .uploadForm input[name='file'] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0; }
+  #manager .handleJson .jsonEditor .bottom-btn {
+    margin: 15px auto; }
+
+/*# sourceMappingURL=manager.css.map */

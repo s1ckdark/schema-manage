@@ -1,0 +1,24 @@
+body {
+  padding: 0;
+  margin: 0;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  line-height: 1.2; }
+
+#navigation {
+  margin: 0 auto; }
+
+.form-control::placeholder {
+  font-size: 0.95rem;
+  color: #aaa;
+  font-style: italic; }
+
+.form-control:focus {
+  box-shadow: none; }
+
+.form-control-underlined {
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-radius: 0;
+  padding-left: 0; }
+
+/*# sourceMappingURL=style.css.map */

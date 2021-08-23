@@ -1,0 +1,128 @@
+<div id="manager" class="row">
+  <div class="mode">
+    <a class="mode-serach" data-mode=".search">SEARCH</a>
+    <a class="mode-insert" data-mode=".insert">INSERT</a>
+  </div>
+  <div class="search col-lg-8 mx-auto">
+    <div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="message" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="validate_logs_Schema_name">Message</h5>
+        <button type="button" class="modal-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer d-flex">
+        <button type="button" class="modal-close btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="bg-white p-5 mt-5 col-md-8 rounded shadow mx-auto">
+<form id="find">
+    <div class="d-flex justify-content-center">
+      <div class="form-group col-md-6">
+    <label for="schemaName">Schema Name</label>
+    <input type="text" class="form-control form-control-underlined" name="schema_name"  id="schema_name" placeholder="Schema Name"/>
+  </div>
+    <div class="form-group col-md-2">
+      <button type="submit" class="btn btn-primary">조 회</button>
+    </div>
+  </div>
+</form>
+</div>
+<div class="resultoffindbyschema px-1 py-5 invisible">
+  <table class="table table-hover">
+    <thead class="thead-dark text-center">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Project Name</th>
+        <th scope="col">Schema Name</th>
+        <th scope="col">Create Date</th>
+        <th scope="col">Detail</th>
+      </tr>
+    </thead>
+    <tbody class="table_contents"></tbody>
+  </table>
+</div>
+<div class="modal fade" id="validate_logs_sum" tabindex="-1" role="dialog" aria-labelledby="validate_logs_sum" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="validate_logs_Schema_name"></h5>
+        <span class="modal-count"></span>
+        <button type="button" class="modal-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <table class="table table-hover">
+        <thead class="thead-dark text-center">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Project Name</th>
+            <th scope="col">Schema Name</th>
+            <th scope="col">Create Date</th>
+            <th scope="col">Total Cnt</th>
+            <th scope="col">Error File Cnt</th>
+            <th scope="col">Pass File Cnt</th>
+            <th scope="col">Error Ratio</th>
+          </tr>
+        </thead>
+        <tbody class="table_contents"></tbody>
+      </table>
+      </div>
+      <div class="modal-footer d-flex">
+        <button type="button" class="modal-close btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="insert">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="projectName">Project Name</label>
+      <input type="text" class="form-control" name="project_name" id="projectName" placeholder="Project Name"/ >
+    </div>
+  </div>
+  <div class="form-group col-md-4">
+    <label for="schemaName">Schema Name</label>
+    <input type="text" class="form-control" name="schema_name" id="schemaName" placeholder="Schema Name"/ >
+  </div>
+  <div class="handleJson">
+    <div class="template_selector my-3 me-3">
+      <% var i=1;while(i < 4){ %>
+         <a class="btn template-pop btn-secondary" data-temp=<%=i%>1"><%=i%>번 템플릿</a>
+      <% i++; } %>
+    </div>
+  <div class="jsonEditor">
+      <div class="editor">
+        <div class="textarea" id="text-area1"></div>
+        <div class="textarea" id="text-area2"></div>
+      </div>
+      <div class="bottom-btn d-flex flex-row justify-content-between">
+        <div class="uploadForm">
+          <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            <div class="form-group">
+              <button id="uploadBtn" class="btn btn-primary">Upload a file</button>
+              <input type="file" class="form-control-file" id="file" name="file" required>
+            </div>
+          </form>
+        </div>
+        <div class="register">
+          <button class="btn btn-primary" id="registerbtn">등 록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-chrome.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/worker-json.min.js"></script>
+<script src="./javascripts/manager.js"></script>
+<link rel="stylesheet" type="text/css" href="./stylesheets/manager.css">
