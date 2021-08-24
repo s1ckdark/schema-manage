@@ -1,0 +1,35 @@
+#register {
+  position: relative; }
+  #register .mode {
+    position: absolute;
+    top: 10px;
+    left: 10px; }
+  #register form label {
+    display: none; }
+  #register .handleJson .template_elector .btn {
+    border: 1px solid #bcbcbc;
+    margin: 15px 10px 15px 0; }
+  #register .handleJson .jsonEditor .btn {
+    display: inline-block;
+    padding: 10px 15px; }
+  #register .handleJson .jsonEditor .editor {
+    display: flex; }
+    #register .handleJson .jsonEditor .editor .textarea {
+      display: inline-block;
+      width: 50%;
+      height: 800px;
+      border: 1px solid #ddd; }
+  #register .handleJson .jsonEditor .uploadForm .form-group {
+    position: relative;
+    overflow: hidden;
+    display: inline-block; }
+  #register .handleJson .jsonEditor .uploadForm input[name='file'] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0; }
+  #register .handleJson .jsonEditor .bottom-btn {
+    margin: 15px auto; }
+
+/*# sourceMappingURL=register.css.map */

@@ -11,6 +11,21 @@ const fs = require('fs');
 const passport = require('passport');
 const app = express();
 
+// mongodb
+const { mongodb } = require('mongodb');
+const dbConfig = require('./db.config.js');
+
+const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;
+var MongoClient = require('mongodb').MongoClient, db;
+
+MongoClient.connect(uri).then((client) => {
+  global.db = client.db(dbConfig.DB);
+    console.log("Connected to the database!");
+  })
+  .catch(err => {
+    console.log("Cannot cconnect to the database!", err);
+    process.exit();
+});
 
 // cors 
 var corsOptions = {

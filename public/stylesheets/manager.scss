@@ -18,44 +18,4 @@
       }
     }
   }
-  .handleJson {
-    .template_elector {
-      .btn {
-        border: 1px solid #bcbcbc;
-        margin: 15px 10px 15px 0; 
-      }
-    }
-    .jsonEditor {
-      .btn {
-        display: inline-block;
-        padding: 10px 15px;
-      }
-      .editor {
-        display: flex;
-        .textarea{
-          display: inline-block;
-          width: 50%;
-          height: 800px;
-          border: 1px solid #ddd;
-        } 
-      }
-      .uploadForm {
-        .form-group {
-          position: relative;
-          overflow: hidden;
-          display: inline-block;
-        }
-        input[name='file'] {
-          font-size: 100px;
-          position: absolute;
-          left: 0;
-          top: 0;
-          opacity: 0;
-        }
-      }
-      .bottom-btn {
-        margin: 15px auto;
-      }
-    }
-  }
 }

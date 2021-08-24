@@ -63,10 +63,7 @@ router.post("/signin", function (req, res, next) {
         next();
       }
       // res.status(401).send(info);
-    })(req, res)}, passport.serializeUser(function(user, done) {
-  console.log(user);
-  done(null, user.username);
-}), users.signin);
+    })(req, res)}, users.signin);
 router.post("/signup", users.signup);
 router.post("/signout", users.signout);
 router.post("/mypage", users.mypage);

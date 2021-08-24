@@ -6,22 +6,6 @@ const JSONTreeView = require('json-tree-view');
 const jgs = require('json-gen-schema');
 const util = require("util");
 
-// mongodb
-const { mongodb } = require('mongodb');
-const dbConfig = require('../db.config.js');
-
-const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;
-var MongoClient = require('mongodb').MongoClient, db;
-
-MongoClient.connect(uri).then((client) => {
-  db = client.db(dbConfig.DB);
-    console.log("Connected to the database!");
-  })
-  .catch(err => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
-});
-
 async function createSchemaByJson(client, nameOfProject){
     const result = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
 
