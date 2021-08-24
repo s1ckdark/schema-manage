@@ -714,10 +714,10 @@ var jsonTree = (function() {
          * @param {Object | Array} jsonObj - json-data
          */
         loadData : function(jsonObj) {
-            // if (!utils.isValidRoot(jsonObj)) {
-            //     alert('The root should be an object or an array');
-            //     return;
-            // }
+            if (!utils.isValidRoot(jsonObj)) {
+                alert('The root should be an object or an array');
+                return;
+            }
 
             this.sourceJSONObj = jsonObj;
             
