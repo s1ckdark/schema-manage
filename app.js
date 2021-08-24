@@ -15,6 +15,7 @@ const app = express();
 const { mongodb } = require('mongodb');
 const dbConfig = require('./db.config.js');
 
+// const uri = `mongodb://${dbConfig.USER}:${dbConfig.PASSWORD}@${dbConfig.HOST}:${dbConfig.PORT}/`;
 const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;
 var MongoClient = require('mongodb').MongoClient, db;
 

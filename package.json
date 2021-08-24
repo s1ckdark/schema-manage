@@ -21,6 +21,7 @@
     "jquery": "^3.6.0",
     "json-gen-schema": "^0.0.3-beta",
     "json-tree-view": "^0.4.12",
+    "json-tree-viewer": "^0.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.1.0",
     "morgan": "~1.9.1",

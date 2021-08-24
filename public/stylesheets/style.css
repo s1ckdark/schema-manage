@@ -4,6 +4,9 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   line-height: 1.2; }
 
+ul {
+  list-style-type: none; }
+
 #navigation {
   margin: 0 auto; }
 
