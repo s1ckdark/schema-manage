@@ -1,2 +1,75 @@
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+<div id="analyzer" class="row">
+    <div id="side" class="col-lg-2 invisible">
+        <div id="listoferror">
+            <div id="all">전 체</div>
+            <div id="er-01-01">er-01-01</div>
+            <div id="er-02-01">er-02-01</div>
+            <div id="er-03-01">er-03-01</div>
+            <div id="er-03-02">er-03-02</div>
+            <div id="er-04-01">er-04-01</div>
+            <div id="er-00-00">er-00-00</div>
+        </div>
+    </div>
+    <div id="lookup" class="col-lg-10 mx-auto">
+        <div class="bg-white p-5 mt-5 col-md-8 rounded shadow mx-auto">
+            <form id="keyword">
+                <div class="d-flex justify-content-center">
+                    <div class="form-group col-md-4">
+                        <label for="projectName">Project Name</label>
+                        <input type="text" class="form-control form-control-underlined" name="project_name"  id="project_name" placeholder="Project Name"/>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="schemaName">Schema Name</label>
+                        <input type="text" class="form-control form-control-underlined" name="schema_name"  id="schema_name" placeholder="Schema Name"/>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <button type="submit" class="btn btn-primary">조 회</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="result" class="invisible">
+            <table id="validate_logs_sum" class="table table-hover">
+                <thead class="thead-dark text-center">
+                <tr>
+                  <th scope="col">전체 파일 개수</th>
+                  <th scope="col">오류 파일 개수</th>
+                  <th scope="col">정상 파일 개수</th>
+                  <th scope="col">오류 파일 비율</th>
+                </tr>
+                </thead>
+                <tbody class="table_contents"></tbody>
+            </table>
+            <table id="validate_logs" class="table table-hover">
+                <thead class="thead-dark text-center">
+                <tr>
+                  <th scope="col">전체 세부항목 개수</th>
+                  <th scope="col">오류 세부항목 개수</th>
+                  <th scope="col">정상 세부항목 개수</th>
+                  <th scope="col">오류 세부항목 비율</th>
+                </tr>
+                </thead>
+                <tbody class="table_contents"></tbody>
+            </table>
+        </div>
+        <div id="validate_logs_list" class="px-1 py-5 invisible">
+            <table class="table table-hover">
+                <thead class="thead-dark text-center">
+                  <tr>
+                    <th scope="col">json file</th>
+                    <th scope="col">Project Name</th>
+                    <th scope="col">Schema Name</th>
+                    <th scope="col">error field</th>
+                    <th scope="col">error code</th>
+                    <th scope="col">error name</th>
+                    <th scope="col">error msg</th>
+                    <th scope="col">create_dt</th>
+                  </tr>
+                </thead>
+                <tbody class="table_contents"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="./javascripts/analyzer.js"></script>
+<link rel="stylesheet" type="text/css" href="./stylesheets/analyzer.css">

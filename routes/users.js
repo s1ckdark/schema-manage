@@ -1,23 +1,79 @@
 var express = require('express');
 var router = express.Router();
 const users = require('../controller/users');
+const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-// mongodb
-const { mongodb } = require('mongodb');
-const dbConfig = require('../db.config.js');
+const crypto = require("crypto");
 
-const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;
-var MongoClient = require('mongodb').MongoClient, db;
+passport.use(
+  "signup",
+  new LocalStrategy(
+    {
+      usernameField: "username",
+      passwordField: "password",
+      passReqToCallback: true
+    },
+    (req, username, password, cb) => {
+    	console.log(username);
+      try {
+        db.collection('users').findOne({ where: { username } }).then(user => {
+          if (user) {
+            return cb(null, false, { message: "Already registered!" });
+          } else {
+            let encryptedPassword = crypto
+              .createHash("sha1")
+              .update(password)
+              .digest("hex");
+              console.log(encryptedPassword);
+            db.collection('users').create({
+              username: username,
+              password: encryptedPassword,
+            }).then(user => {
+              return cb(null, user, { message: "Successfully registered!" });
+            });
+          }
+        });
+      } catch (err) {
+        cb(err, false);
+      }
+    }
+  )
+);
 
-MongoClient.connect(uri).then((client) => {
-  db = client.db(dbConfig.DB);
-    console.log("Connected to the database!");
-  })
-  .catch(err => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
-});
+passport.use(
+  "signin",
+  new LocalStrategy(
+    {
+      usernameField: "username",
+      passwordField: "password"
+    },
+    function(username, password, cb) {
+      let encryptedPassword = crypto
+        .createHash("sha1")
+        .update(password)
+        .digest("hex");
+      return db.collection('users').findOne({ where: { username } })
+        .then(user => {
+          if (!user || user.dataValues.password !== encryptedPassword) {
+            return cb(null, false, { message: "Incorrect username or password." });
+          }
+          return cb(null, user, { message: "Logged In Successfully" });
+        })
+        .catch(err => cb(err, false));
+    }
+  )
+);
+
+function isLoggedIn(req, res, next) {
+
+	// if user is authenticated in the session, carry on
+	if (req.isAuthenticated())
+		return next();
+
+	// if they aren't redirect them to the home page
+	res.redirect('/');
+}
 
 
 
@@ -26,7 +82,7 @@ MongoClient.connect(uri).then((client) => {
 
 //    });
 // }
-passport.use(new LocalStrategy(
+passport.use("llogin", new LocalStrategy(
   function(username, password, done) {
     db.collection('users').findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
@@ -41,30 +97,17 @@ passport.use(new LocalStrategy(
   }
 ));
 
-passport.serializeUser(function(user, done) {
-  console.log(user);
-  done(null, user.username);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(username, function(err, user) {
-    done(err, user);
-  });
-});
-
 /* GET users listing. */
-router.post("/signin", function (req, res, next) {
-      passport.authenticate('local', function (error, user, info) {
-      if (error) {
-        res.status(401).send(error);
-      } else if (!user) {
-        res.status(401).send(info);
-      } else {
-        next();
-      }
-      // res.status(401).send(info);
-    })(req, res)}, users.signin);
-router.post("/signup", users.signup);
+router.post("/signin", passport.authenticate('login', {
+		successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/login', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
+router.post("/signup",passport.authenticate('signup', {
+		successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/signup', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
 router.post("/signout", users.signout);
 router.post("/mypage", users.mypage);
 

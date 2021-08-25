@@ -1,52 +1,82 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-// mongodb
-const { mongodb } = require('mongodb');
-const dbConfig = require('../db.config.js');
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const crypto = require("crypto");
+const User = db.collection('users');
 
+passport.use(
+  "register",
+  new LocalStrategy(
+    {
+      usernameField: "username",
+      passwordField: "password",
+      passReqToCallback: true
+    },
+    (req, username, password, cb) => {
+      try {
+        Users.findOne({ where: { username } }).then(user => {
+          if (user) {
+            return cb(null, false, { message: "Already registered!" });
+          } else {
+            let encryptedPassword = crypto
+              .createHash("sha1")
+              .update(password)
+              .digest("hex");
+            Users.create({
+              name: req.body.name,
+              username: username,
+              password: encryptedPassword,
+              provider: "local"
+            }).then(user => {
+              return cb(null, user, { message: "Successfully registered!" });
+            });
+          }
+        });
+      } catch (err) {
+        cb(err, false);
+      }
+    }
+  )
+);
 
-MongoClient.connect(uri).then((client) => {
-  db = client.db(dbConfig.DB);
-    console.log("Connected to the database!");
-  })
-  .catch(err => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
-});
+passport.use(
+  "local_login",
+  new LocalStrategy(
+    {
+      usernameField: "username",
+      passwordField: "password"
+    },
+    function(username, password, cb) {
+      let encryptedPassword = crypto
+        .createHash("sha1")
+        .update(password)
+        .digest("hex");
+      return Users.findOne({ where: { username } })
+        .then(user => {
+          console.log(user);
+          if (!user || user.dataValues.password !== encryptedPassword) {
+            return cb(null, false, { message: "Incorrect username or password." });
+          }
+          return cb(null, user, { message: "Logged In Successfully" });
+        })
+        .catch(err => cb(err, false));
+    }
+  )
+);
 
-
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
-
-passport.use(new LocalStrategy(
+passport.use(
+  "login",
+  new LocalStrategy(
   function(username, password, done) {
-    console.log("Verification function called");
-    db.collection('user').findOne({ username: username }, function (err, user) {
+    db.collection('users').findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+        return done(null, false, { status:401,message: 'Incorrect username.' });
       }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
+      if (user.password != password) {
+        return done(null, false, { status:401,message: 'Incorrect password.' });
       }
-      passport.serializeUser((user, done) => {
-        console.log("serializ");
-        done(null, user.username);
-      });
       return done(null, user);
     });
   }
 ));
 
-module.exports.send = (req, res, next) => {
-  return uploadMem.single('file')(req, res, () => {
-    // Remember, the middleware will call it's next function
-    // so we can inject our controller manually as the next()
-
-    if (!req.file) return res.json({ error: "invalidFiletype" })
-    next()
-  })
-}

@@ -8,10 +8,11 @@ const multer = require('../middleware/multer');
 router.post("/upload", multer.send, api.upload);
 router.post("/insert", api.insert);
 router.post("/findbyschema", api.findbyschema);
-router.post("/validate_logs_sum", api.validate_logs_sum);
+router.post("/validatelogssum", api.validatelogssum);
 router.post("/create", api.create);
-router.post("/validate_logs", api.validate_logs);
+router.post("/validatelogslist", api.validatelogslist);
 router.post("/exporttocsv", api.exporttocsv);
 router.post("/overwrite", api.overwrite);
+router.post("/distinct", api.distinct);
 
 module.exports = router;

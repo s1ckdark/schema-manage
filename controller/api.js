@@ -6,25 +6,25 @@ const JSONTreeView = require('json-tree-view');
 const jgs = require('json-gen-schema');
 const util = require("util");
 
-async function createSchemaByJson(client, nameOfProject){
-    const result = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
+// async function createSchemaByJson(client, nameOfProject){
+//     const result = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
 
-    console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
-    console.log(result.insertedIds);
-}
+//     console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
+//     console.log(result.insertedIds);
+// }
 
-const findOneBySdhema = async (nameOfSdhema, keyword) => {
-    const result = await db.collection(nameOfProject).findOne(keyword);
+// const findOneBySdhema = async (nameOfSdhema, keyword) => {
+//     const result = await db.collection(nameOfProject).findOne(keyword);
 
-    if (result) {
-    	console.log("success");
-        // console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
-        console.log(result);
-    } else {
-    	console.log("fail");
-        // console.log(`No listings found with the name '${nameOfListing}'`);
-    }
-}
+//     if (result) {
+//     	console.log("success");
+//         // console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
+//         console.log(result);
+//     } else {
+//     	console.log("fail");
+//         // console.log(`No listings found with the name '${nameOfListing}'`);
+//     }
+// }
 
 async function dropUpdateSchema(client, nameOfProject) {
     const result = await client.db("sample_airbnb").collection("listingsAndReviews")
@@ -59,20 +59,18 @@ const api = {
 		const jgs_data = JSON.stringify(jgs(JSON.parse(ori_data)),null,4);
   	res.status(200).json({ori:ori_data,jgs:jgs_data})
 	},
-	validate_logs_sum: async(req, res) => {
+	validatelogssum: async(req, res) => {
 		var json = req.body;
-	  await db.collection('validate_logs_sum').find(json).sort({_id:-1}).toArray(function (err, result) {
+	  await db.collection('validate_logs_sum').find(json, {projection:{_id:0}}).sort({_id:-1}).limit(1).toArray(function (err, result) {
       limit = result.slice(0,10);
-      console.log(result);
-      res.status(200).json({data:limit,cnt:result.length})
+      res.status(200).json({data:limit,cnt:result.length,success: true})
     })
 	},
-	validate_logs: async(req, res) => {
+	validatelogslist: async(req, res) => {
 		var json = req.body;
-		console.log(json);
-	  await db.collection('validate_logs').find(json).sort({_id:-1}).limit(1).toArray(function (err, result) {
-      res.status(200).json(result)
-    })
+	 	 await db.collection('validate_logs').find(json, {projection:{_id:0}}).sort({_id:-1}).limit(20).toArray(function (err, result) {
+    	  res.status(200).json({data:result,success:true})
+   	 })
 	},
 	exporttocsv: async(req, res) => {
 		res.json({"page":"schema export to csv"});	
@@ -85,6 +83,12 @@ const api = {
 		await db.createCollection(json.schema_name, validate_rule, function(err, result){
 			if(!result) {res.status(200).json(err)}
 			res.json({success:1})
+		})
+	},
+	distinct: async(req, res) => {
+		var json = req.body;
+		await db.collection('validate_logs').aggregate([{"$group" : {"_id":"$error_code", count:{$sum:1}}}]).toArray(function(err, result){
+			res.json({success:1, error_code_list:result})
 		})
 	}
 }

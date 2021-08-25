@@ -1,18 +1,12 @@
-const { User } = require("../models/User");
+const passport = require("passport");
 
-let auth = (req, res, next) => {
-  let token = req.cookies.x_auth;
-
-  User.findByToken(token)
-    .then((user) => {
-      if (!user) return res.json({ isAuth: false, error: true });
-      req.token = token;
-      req.user = user;
-      next();
-    })
-    .catch((err) => {
-      throw err;
-    });
+exports.isLoggedIn = (req, res, next) => {
+  // passport.authenticate("local", { session: false }, (err, user) => {
+  //   if (user) {
+  //     req.user = user;
+  //     next();
+  //   } else {
+  //     res.status(403).send("로그인 필요");
+  //   }
+  // })(req, res, next);
 };
-
-module.exports = { auth };

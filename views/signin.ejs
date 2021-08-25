@@ -1,6 +1,7 @@
 <div class="container">
     <div class="wrapper">
-        <form method="post" name="Login_Form" class="form-signin">            <h3 class="form-signin-heading">Welcome Back! Please Sign In</h3>
+        <form method="post" name="Login_Form" class="form-signin">            
+          <h3 class="form-signin-heading">Welcome Back! Please Sign In</h3>
               <hr class="colorgraph"><br>
               
               <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />
@@ -12,7 +13,6 @@
 </div>
 <script>
     $('.btn').click(function(){
-
         var json = {
           'username': $("input[name='username']").val(),
           'password': $("input[name='password']").val()
@@ -26,10 +26,14 @@
           processData: false,
           contentType: "application/json",
           success: function(res) {
-            // location.href="./";
+            messages(res.message);
+            $('#message').on('hidden.bs.modal', function (e) {
+              location.href="/";     
+           })
           },
           error: function(err){
-            $('#message').html("<h3>"+err.message+"</h3>");
+            console.log(err);
+            messages(err.responseJSON.message);
           }
         });
     })

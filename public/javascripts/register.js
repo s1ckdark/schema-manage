@@ -21,20 +21,6 @@
           }
       })
   })
-  function messages(str) {
-    $("#message .modal-body h3").text(str);
-    $("#message").modal("show");
-  }
-  var err_code = [
-    { 
-      "codeName":"48",
-      "message":"OverWrite? (기존 Schema는 보관됩니다)"
-    },
-    { 
-      "codeName":"32",
-      "message":"잘못된 JSON 형식입니다."
-    },
-  ];
 
    $('#registerbtn').click(function(){
     
@@ -115,13 +101,6 @@
         console.log(err);
       }
     });
-  })
-
-  $('#message').on('hidden.bs.modal', function (e) {
-     $("#message .modal-body h3").empty();
-  })
-  $("#message .modal-close").click(function(){
-    $("#message").modal('hide');
   })
 
   function loadEditor(container, readonly){

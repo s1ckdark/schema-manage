@@ -4,29 +4,39 @@ const session = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const bodyParser = require("body-parser");
 const logger = require('morgan');
 const cors = require("cors");
-const fs = require('fs');
-const passport = require('passport');
+const fs = require('fs');               
+const passport = require('passport');   
 const app = express();
+var flash    = require('connect-flash');
+const mongoose = require('mongoose');
 
 // mongodb
 const { mongodb } = require('mongodb');
 const dbConfig = require('./db.config.js');
 
 // const uri = `mongodb://${dbConfig.USER}:${dbConfig.PASSWORD}@${dbConfig.HOST}:${dbConfig.PORT}/`;
-const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;
+const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;     
 var MongoClient = require('mongodb').MongoClient, db;
 
 MongoClient.connect(uri).then((client) => {
   global.db = client.db(dbConfig.DB);
     console.log("Connected to the database!");
   })
-  .catch(err => {
+  .catch(err => {    
     console.log("Cannot cconnect to the database!", err);
     process.exit();
-});
+});          
+
+// connects our back end code with the database
+// mongoose.connect(uri, { useNewUrlParser: true });
+// let mdb = mongoose.connection;
+// mdb.once('open', () => console.log('connected to the database'));
+
+// // checks if connection with the database is successful
+// mdb.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 // cors 
 var corsOptions = {
@@ -36,11 +46,6 @@ app.use(cors(corsOptions));
 
 
 app.use(logger('dev'));
-// parse requests of content-type - application/json
-// app.use(bodyParser.json());
-// parse requests of content-type - application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -51,8 +56,21 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(passport.initialize());
 
+
+// PASSPORT SETUP 
+passport.serializeUser(function (user, done) {
+  done(null, user._id); // 세션 저장소에 id를 저장
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findOne({ _id: id }, (err, user) => {
+    done(null, user); // 세션 저장소에 저장된 id값을 DB에서 조회하여 req.user에 담음 
+  });
+});
+
+app.use(passport.initialize()); 
+app.use(passport.session());
 
 // express-ejs-la ㅖyout
 app.use(express.static(path.join(__dirname, 'public')));
