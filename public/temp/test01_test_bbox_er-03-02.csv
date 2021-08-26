@@ -1,0 +1,2 @@
+﻿project_name,schema_name,json_file,error_field,error_code,error_name,errpr_msg,create_dt
+test01,test_bbox,/Users/byoon/work/ssl/validator-v1/data/test_data/data/bbox_invalid//test02.json,camera.int_test,er-03-02,value 유효범위 오류,,20210821212540

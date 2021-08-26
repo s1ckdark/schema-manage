@@ -9,7 +9,7 @@ const cors = require("cors");
 const fs = require('fs');               
 const passport = require('passport');   
 const app = express();
-var flash    = require('connect-flash');
+var flash = require('connect-flash');
 const mongoose = require('mongoose');
 
 // mongodb
@@ -17,7 +17,7 @@ const { mongodb } = require('mongodb');
 const dbConfig = require('./db.config.js');
 
 // const uri = `mongodb://${dbConfig.USER}:${dbConfig.PASSWORD}@${dbConfig.HOST}:${dbConfig.PORT}/`;
-const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;     
+const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;    
 var MongoClient = require('mongodb').MongoClient, db;
 
 MongoClient.connect(uri).then((client) => {
@@ -29,14 +29,12 @@ MongoClient.connect(uri).then((client) => {
     process.exit();
 });          
 
-// connects our back end code with the database
+// // connects our back end code with the database
 // mongoose.connect(uri, { useNewUrlParser: true });
-// let mdb = mongoose.connection;
+// global.mdb = mongoose.connection;
 // mdb.once('open', () => console.log('connected to the database'));
-
 // // checks if connection with the database is successful
 // mdb.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 
 // cors 
 var corsOptions = {
@@ -44,19 +42,16 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  session({
+app.use(session({
     secret: 'secret',
     resave: true,
     saveUninitialized: true
   })
 );
 app.use(cookieParser());
-
 
 // PASSPORT SETUP 
 passport.serializeUser(function (user, done) {
@@ -81,7 +76,6 @@ app.set('layout extractStyles', true)
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-// <%= title %>
 
 // bootstrap, Jquery
 const indexRouter = require('./routes/index');
@@ -112,16 +106,12 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-/* server on */
+//server on
 var port = process.env.PORT || 8080;
 // Send message for default URL
-
 // Launch app to listen to specified port
 app.listen(port, function () {
   console.log("Running on port " + port);
 });
-
-
 
 module.exports = app;

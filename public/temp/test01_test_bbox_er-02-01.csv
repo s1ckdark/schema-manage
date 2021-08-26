@@ -1,0 +1,4 @@
+﻿project_name,schema_name,json_file,error_field,error_code,error_name,errpr_msg,create_dt
+test01,test_bbox,/Users/byoon/work/ssl/validator-v1/data/test_data/data/bbox_invalid//test02.json,info,er-02-01,필수 키 누락,,20210821212540
+test01,test_bbox,/Users/byoon/work/ssl/validator-v1/data/test_data/data/bbox_invalid//test02.json,camera,er-02-01,필수 키 누락,,20210821212540
+test01,test_bbox,/Users/byoon/work/ssl/validator-v1/data/test_data/data/bbox_invalid//test02.json,camera.class,er-02-01,필수 키 누락,,20210821212540

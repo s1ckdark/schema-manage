@@ -79,7 +79,9 @@ $('#keyword').submit(function(event){
 $('#listoferror > div').click(function(){
 	$('#validate_logs_list').removeClass('invisible');
 	$('#validate_logs_list .table_contents').empty();
+	$('#validate_logs_list #csv-btn').remove();
 	var error_item_cnt = $(this).data('cnt');
+	var errcode = $(this).attr('id');
 	var cal = calculate(validate_logs_cnt, error_item_cnt);
 	for(var key in cal){
 		$('.'+key).text(cal[key]);
@@ -87,7 +89,7 @@ $('#listoferror > div').click(function(){
 	var json = {
 	  'project_name': $('#keyword input[name="project_name"]').val(),
       'schema_name': $('#keyword input[name="schema_name"]').val(),
-      'error_code': $(this).attr('id')
+      'error_code': errcode
     }
     $.ajax({
 		type: 'POST',
@@ -104,8 +106,8 @@ $('#listoferror > div').click(function(){
 				res['data'].map(res => {
 					list += "<tr class='text-center align-middle'>";
 				    list +="<td class='px-2 py-4 col-md-2'>"+res['json_file']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-1'>"+res['project_Name']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-1'>"+res['schema_Name']+"</td>";
+                    list +="<td class='px-2 py-4 col-md-1'>"+res['project_name']+"</td>";
+                    list +="<td class='px-2 py-4 col-md-1'>"+res['schema_name']+"</td>";
                     list +="<td class='px-2 py-4 col-md-2'>"+res['error_field']+"</td>";
                     list +="<td class='px-2 py-4 col-md-1'>"+res['error_code']+"</td>";
                     list +="<td class='px-2 py-4 col-md-1'>"+res['error_name']+"</td>";
@@ -113,9 +115,8 @@ $('#listoferror > div').click(function(){
                     list +="<td class='px-2 py-4 col-md-2'>"+res['create_dt']+"</td>"
                     list +="</tr>";
 				})
-				console.log(list);
 				$('#validate_logs_list .table_contents').append(list);
-
+				$('#validate_logs_list').prepend("<button type='button' id='csv-btn' class='btn btn-secondary' onClick='exporttocsv(`"+errcode+"`)'>"+errcode+" CSV로 저장하기</button>");
 			}
 		},
 		error: function(err){
@@ -124,5 +125,31 @@ $('#listoferror > div').click(function(){
 	});
 })
 
-
-
+const exporttocsv = (errcode) => {
+	var json = {
+	  'project_name': $('#keyword input[name="project_name"]').val(),
+      'schema_name': $('#keyword input[name="schema_name"]').val(),
+      'error_code': errcode
+    }
+	$.ajax({
+		type: 'POST',
+		url: '/api/exporttocsv',
+		dataType: 'json',
+		data: JSON.stringify(json),
+		async: true,
+		processData: false,
+		contentType: 'application/json',
+		success: function(res) {
+			if(res.success == true) {
+				 var popout = window.open('./download/'+res.filepath);
+			      window.setTimeout(function(){
+			         popout.close();
+			      }, 2000);
+				messages("저장 완료")
+			}
+		},
+		error: function(err){
+			console.log(err);
+		}
+	});
+}

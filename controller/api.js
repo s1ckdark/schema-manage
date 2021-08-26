@@ -5,6 +5,8 @@ const path = require('path');
 const JSONTreeView = require('json-tree-view');
 const jgs = require('json-gen-schema');
 const util = require("util");
+const jsoncsv = require('json-csv');
+const fs = require('fs');
 
 // async function createSchemaByJson(client, nameOfProject){
 //     const result = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
@@ -36,7 +38,7 @@ async function dropUpdateSchema(client, nameOfProject) {
 const api = {
 	findbyschema: async(req, res) => {
 		var json = req.body;
-	  await db.collection('schema_reg').find(json).toArray(function (err, result) {    
+	  await mdb.collection('schema_reg').find(json).toArray(function (err, result) {    
       if(result.length > 0) res.status(200).json({status:1,data:result, message:"success"})
       else res.status(200).json({status:0, message:"Success but nothing"})
     })
@@ -60,7 +62,7 @@ const api = {
   	res.status(200).json({ori:ori_data,jgs:jgs_data})
 	},
 	validatelogssum: async(req, res) => {
-		var json = req.body;
+	  var json = req.body;
 	  await db.collection('validate_logs_sum').find(json, {projection:{_id:0}}).sort({_id:-1}).limit(1).toArray(function (err, result) {
       limit = result.slice(0,10);
       res.status(200).json({data:limit,cnt:result.length,success: true})
@@ -72,9 +74,55 @@ const api = {
     	  res.status(200).json({data:result,success:true})
    	 })
 	},
-	exporttocsv: async(req, res) => {
-		res.json({"page":"schema export to csv"});	
-		// res.status(200).json({ori:ori_data,jgs:jgs_data})
+	exporttocsv: async(req, res, next) => {
+		var json = req.body;
+		let options = {
+		  fields: [
+		    {
+		      name: 'project_name',
+		      label: 'project_name',
+		    },
+		    {
+		      name: 'schema_name',
+		      label: 'schema_name',
+		    },
+		    {
+		      name: 'json_file',
+		      label: 'json_file',
+		    },		    
+		    {
+		      name: 'error_field',
+		      label: 'error_field',
+		    },		    
+		    {
+		      name: 'error_code',
+		      label: 'error_code',
+		    },		    
+		    {
+		      name: 'error_name',
+		      label: 'error_name',
+		    },		    
+		    {
+		      name: 'errpr_msg',
+		      label: 'errpr_msg',
+		    },		    
+		    {
+		      name: 'create_dt',
+		      label: 'create_dt',
+		    },		    
+		  ],
+		}
+		var list = await db.collection('validate_logs').find(json, {projection:{_id:0}}).sort({_id:-1});
+		let csv = await jsoncsv.buffered(list,options);
+		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv",  '\uFEFF' + csv, function(err, res){
+			if(err){
+				console.log(err);
+				throw err
+			}
+		})
+		res.status(200).json({success:true,message:"saved",filepath:json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
+		// res.download("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv")
+
 	},
 	overwrite: async(req, res) => {
 		var json = req.body;
