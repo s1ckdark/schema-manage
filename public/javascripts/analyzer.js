@@ -11,8 +11,9 @@ $('#keyword').submit(function(event){
 	$('#side #listoferror > div').removeData();
 	validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0;
     var json = {
-	  'project_name': $('#keyword input[name="project_name"]').val(),
-      'schema_name': $('#keyword input[name="schema_name"]').val()
+	  'project_name': '/^'+$('#keyword input[name="project_name"]').val()+'/',
+    'schema_name': '/^'+$('#keyword input[name="schema_name"]').val()+'/',
+    'create_dt': '/^'+$('#keyword input[name="create_dt"]').val()+'/',
     }
     $.ajax({
 		type: 'POST',

@@ -18,7 +18,7 @@ $('.template-pop').click(function(){
       processData: false,
       contentType: 'application/json',
       success: function(res) {
-        res.status == 1 ?
+        res.success == true ?
         res['data'].map( (res, index) => {
           index++;
           var list = "<tr class='text-center align-middle'>";
@@ -40,10 +40,7 @@ $('.template-pop').click(function(){
           });
           
           $('.resultoffindbyschema').removeClass('invisible');
-        }) : $('.resultoffindbyschema').append("<div class='d-flex p-5 justify-content-center'>"+res['message']+"</div>");
-
-
- 
+        }) : messages("검색된 결과가 없습니다");
       },
       error: function(err){
         console.log(err);
@@ -65,7 +62,7 @@ $('.template-pop').click(function(){
   
     $.ajax({
       type: 'POST',
-      url: '/api/validate_logs_sum',
+      url: '/api/validatelogssum',
       dataType: 'json',
       data: JSON.stringify(json),
       async: true,
@@ -90,10 +87,11 @@ $('.template-pop').click(function(){
           $('#validate_logs_sum .table_contents').append(result);
         })
         $('#validate_logs_sum .modal-title').text(json.schema_name);
-        $('#validate_logs_sum .modal-count').text("10 / "+res.cnt);
+        $('#validate_logs_sum .modal-count').text(res.cnt+"건이 조회");
       } else {
-          $('#validate_logs_sum .modal-title').text(json.schema_name);
-          $('#validate_logs_sum .modal-body').append("<h3 class='text-center message'>검색결과가 없습니다</h3>");
+          // $('#validate_logs_sum .modal-title').text(json.schema_name);
+          // $('#validate_logs_sum .modal-body').append("<h3 class='text-center message'>검색결과가 없습니다</h3>");
+          messages("검색결과가 없습니다");
       }
       },
       error: function(err){

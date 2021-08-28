@@ -1,2 +1,8 @@
-    <h1><%= title %></h1>
+<h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <% if(user){ %>
+    <p>You are currently logged in as <%= user.email %></p>
+  <% } else { %>
+    <p>You are currently not logged in. Plaese login or register...</p>
+    <% } %>
+

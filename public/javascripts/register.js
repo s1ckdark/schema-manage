@@ -29,14 +29,6 @@
     var create_dt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace( /\s|:|-/g, ""); 
     var validation_rule = editor2.getValue();
 
-    function parse(str) {
-      try {
-        var json = JSON.parse(str);
-        return (typeof json === 'object');
-      } catch (e) {
-        return false;
-      }
-    }
     if(parse(validation_rule) == false) {messages("올바른 JSON 형식이 아닙니다");return false;} 
 
     var insertData = {
@@ -56,46 +48,48 @@
       contentType: "application/json",
       success: function(res) {
         console.log(res);
-        $("#message .modal-body h3").text("등록완료");
-        $("#message").modal("show");
-          $.ajax({
-      type: 'POST',
-      url: '/api/create',
-      dataType: 'json',
-      data: JSON.stringify(insertData),
-      async: true,
-      processData: false,
-      contentType: "application/json",
-      success: function(res) {
-        messages(res.codeName);
-        if(res.code == 48){
-        $("#message .modal-footer").append("<button class='btn btn-primary' type='button' id='overwrite'>OverWrite? (기존 Schema는 보관됩니다)</h3>");
-        }
-        $('#overwrite').click(function(){
+        if(res.success == true) {
+          messages("schema-reg 등록 완료");
           $.ajax({
             type: 'POST',
-            url: '/api/overwrite',
+            url: '/api/create',
             dataType: 'json',
             data: JSON.stringify(insertData),
             async: true,
             processData: false,
             contentType: "application/json",
             success: function(res) {
-              if(res.success == 1) {
-                $('#message .modal-footer .btn-primary').remove();
-                messages("완료하였습니다")
-              } else {
-                $('#message .modal-footer .btn-primary').remove();
-                messages("실패하였습니다.")
+              console.log(res);
+              messages(getbycode(res.code)[0].message);
+              if(res.code == 48){
+              $("#message .modal-footer").append("<button class='btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
               }
-            },
-            error: function(err){
-              console.log(err);
+              $('#overwrite').click(function(){
+                $.ajax({
+                  type: 'POST',
+                  url: '/api/overwrite',
+                  dataType: 'json',
+                  data: JSON.stringify(insertData),
+                  async: true,
+                  processData: false,
+                  contentType: "application/json",
+                  success: function(res) {
+                    if(res.success == 1) {
+                      $('#message .modal-footer .btn-primary').remove();
+                      messages("완료하였습니다")
+                    } else {
+                      $('#message .modal-footer .btn-primary').remove();
+                      messages("실패하였습니다.")
+                    }
+                  },
+                  error: function(err){
+                    console.log(err);
+                  }
+                });
+              })
             }
-          });
-        })
-      }
-    });
+          })
+        }
       },
       error: function(err){
         console.log(err);

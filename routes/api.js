@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const api = require('../controller/api');
-const multer = require('../middleware/multer');
-// const authUtil = require('../middleware/authUtil');
+const multer = require('../modules/multer');
 
-//GET API
 router.post("/upload", multer.send, api.upload);
 router.post("/insert", api.insert);
 router.post("/findbyschema", api.findbyschema);

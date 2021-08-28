@@ -1,29 +1,18 @@
-var express = require('express');
-var router = express.Router();
-var fs = require('fs');
-const { isLoggedIn } = require("../middleware/auth");
-const api = require('../controller/api');
+const express = require('express');
+const router = express.Router();
+const users = require('../controller/users');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose');
+const User = require('../model/User');
+const connectEnsureLogin = require('connect-ensure-login').ensureLoggedIn('/users/signin');
+const auth = require('../modules/auth');
 
-/* GET home page. */
-// router.get('/', isLoggedIn, function(req, res, next) {res.render('home', { title: '홈'});});
-// router.get('/signin', isLoggedIn, function(req, res, next) {res.render('signin', { title: '로그인'});});
-// router.get('/manager', isLoggedIn, function(req, res, next) {res.render('manager', { title: '스키마 관리' });});
-// router.get('/register', isLoggedIn, function(req, res, next) {res.render('register', { title: '스키마 관리' });});
-// router.get('/analyzer', isLoggedIn, function(req, res, next) {res.render('analyzer', { title: '다양성 검사' });});
-// router.get('/result', isLoggedIn, function(req, res, next) {res.render('result', { title: '정확성 검사' });});
-// router.get('/report', isLoggedIn, function(req, res, next) {res.render('report', { title: '레포트 출력' });});
-
-router.get('/', function(req, res, next) {res.render('home', { title: '홈'});});
-router.get('/signin', function(req, res, next) {res.render('signin', { title: '로그인'});});
-router.get('/manager', function(req, res, next) {res.render('manager', { title: '스키마 관리' });});
-router.get('/register', function(req, res, next) {res.render('register', { title: '스키마 관리' });});
-router.get('/analyzer', function(req, res, next) {res.render('analyzer', { title: '다양성 검사' });});
-router.get('/result', function(req, res, next) {res.render('result', { title: '정확성 검사' });});
-router.get('/report', function(req, res, next) {res.render('report', { title: '레포트 출력' });});
-router.get('/download/:file', function(req, res){
-	const file = `./public/temp/${req.params.file}.csv`;
-	console.log(file);
-    res.download(file); 
-});
+router.get('/', function(req, res, next) {res.render('home', {title: '홈', user: req.user});});
+router.get('/manager', connectEnsureLogin, function(req, res, next) {res.render('manager', { title: '스키마 관리' });});
+router.get('/register', connectEnsureLogin, function(req, res, next) {res.render('register', { title: '스키마 관리' });});
+router.get('/analyzer', connectEnsureLogin, function(req, res, next) {res.render('analyzer', { title: '다양성 검사' });});
+router.get('/result', connectEnsureLogin, function(req, res, next) {res.render('result', { title: '정확성 검사' });});
+router.get('/report', connectEnsureLogin, function(req, res, next) {res.render('report', { title: '레포트 출력' });});
+router.get('/download/:file', connectEnsureLogin, function(req, res){const file = `./public/temp/${req.params.file}.csv`; res.download(file); }); 
 
 module.exports = router;

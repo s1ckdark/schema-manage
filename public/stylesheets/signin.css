@@ -1,0 +1,31 @@
+#signin h2 {
+  padding-top: 1.5rem; }
+#signin a {
+  color: #333; }
+#signin a:hover {
+  color: #da5767;
+  text-decoration: none; }
+#signin .card {
+  border: 0.40rem solid #f8f9fa;
+  top: 10%; }
+#signin .form-control {
+  background-color: #f8f9fa;
+  padding: 20px;
+  padding: 25px 15px;
+  margin-bottom: 1.3rem; }
+#signin .form-control:focus {
+  color: #000000;
+  background-color: #ffffff;
+  border: 3px solid #da5767;
+  outline: 0;
+  box-shadow: none; }
+#signin .btn {
+  padding: 0.6rem 1.2rem;
+  background: #da5767;
+  border: 2px solid #da5767; }
+#signin .btn-primary:hover {
+  background-color: #df8c96;
+  border-color: #df8c96;
+  transition: .3s; }
+
+/*# sourceMappingURL=signin.css.map */

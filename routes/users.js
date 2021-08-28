@@ -1,114 +1,40 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const users = require('../controller/users');
-const bcrypt = require('bcrypt');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const crypto = require("crypto");
+const passportLocalMongoose = require('passport-local-mongoose');
+const User = require('../model/User');
+const auth = require('../modules/auth');
+const connectEnsureLogin = require('connect-ensure-login').ensureLoggedIn('/users/signin');
 
-passport.use(
-  "signup",
-  new LocalStrategy(
-    {
-      usernameField: "username",
-      passwordField: "password",
-      passReqToCallback: true
-    },
-    (req, username, password, cb) => {
-    	console.log(username);
-      try {
-        db.collection('users').findOne({ where: { username } }).then(user => {
-          if (user) {
-            return cb(null, false, { message: "Already registered!" });
-          } else {
-            let encryptedPassword = crypto
-              .createHash("sha1")
-              .update(password)
-              .digest("hex");
-              console.log(encryptedPassword);
-            db.collection('users').create({
-              username: username,
-              password: encryptedPassword,
-            }).then(user => {
-              return cb(null, user, { message: "Successfully registered!" });
-            });
-          }
-        });
-      } catch (err) {
-        cb(err, false);
-      }
-    }
-  )
-);
-
-passport.use(
-  "signin",
-  new LocalStrategy(
-    {
-      usernameField: "username",
-      passwordField: "password"
-    },
-    function(username, password, cb) {
-      let encryptedPassword = crypto
-        .createHash("sha1")
-        .update(password)
-        .digest("hex");
-      return db.collection('users').findOne({ where: { username } })
-        .then(user => {
-          if (!user || user.dataValues.password !== encryptedPassword) {
-            return cb(null, false, { message: "Incorrect username or password." });
-          }
-          return cb(null, user, { message: "Logged In Successfully" });
-        })
-        .catch(err => cb(err, false));
-    }
-  )
-);
-
-function isLoggedIn(req, res, next) {
-
-	// if user is authenticated in the session, carry on
-	if (req.isAuthenticated())
-		return next();
-
-	// if they aren't redirect them to the home page
-	res.redirect('/');
-}
-
-
-
-// const validPassword = (password) => {
-//    db.collection('users').findOne({ username: username }, function(err, user){
-
-//    });
-// }
-passport.use("llogin", new LocalStrategy(
-  function(username, password, done) {
-    db.collection('users').findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (user.password != password) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
-  }
-));
-
-/* GET users listing. */
-router.post("/signin", passport.authenticate('login', {
-		successRedirect : '/profile', // redirect to the secure profile section
-		failureRedirect : '/login', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
-	}));
-router.post("/signup",passport.authenticate('signup', {
-		successRedirect : '/profile', // redirect to the secure profile section
-		failureRedirect : '/signup', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
-	}));
-router.post("/signout", users.signout);
-router.post("/mypage", users.mypage);
+router.get('/signin', function(req, res) {res.render('signin', {user: req.user, message: req.flash('error')});});
+router.post('/signin', passport.authenticate('local',     {
+      failureRedirect: '/users/signin', 
+      failureFlash: '로그인 실패, 아이디 또는 비밀번호를 확인해주세요',
+      successRedirect: '/', 
+      successFlash: '로그인 성공',
+      failureFlash : true
+    }));
+router.get('/signup', function(req, res) {res.render('signup', {}); });
+router.post('/signup', passport.authenticate('local', {
+	successRedirect : '/', //redirect to the secure profile section
+	successFlash: '회원 가입 성공',
+	failureFlash: '회원 가입 실패, 아이디 또는 비밀번호를 확인해주세요',
+	failureRedirect : '/users/signup', // redirect back to the signup page if there is an error
+	failureFlash : true // allow flash messages
+}))
+	// function(req, res, next) {
+ //  console.log('registering user');
+ //  User.register(new User({email: req.body.email}), req.body.password, function(err) {
+ //    if (err) {
+ //      console.log('error while user register!', err);
+ //      return next(err);
+ //    }
+ //    res.redirect('/');
+ //  });
+// });
+router.get("/mypage", connectEnsureLogin, function(req, res, next) {res.render("/mypage", { title: "마이페이지"});});
+router.get("/signout", users.signout);
+router.post("/mypage", connectEnsureLogin, users.mypage);
 
 module.exports = router;

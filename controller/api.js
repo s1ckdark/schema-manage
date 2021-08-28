@@ -8,52 +8,26 @@ const util = require("util");
 const jsoncsv = require('json-csv');
 const fs = require('fs');
 
-// async function createSchemaByJson(client, nameOfProject){
-//     const result = await client.db("sample_airbnb").collection("listingsAndReviews").insertMany(newListings);
-
-//     console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
-//     console.log(result.insertedIds);
-// }
-
-// const findOneBySdhema = async (nameOfSdhema, keyword) => {
-//     const result = await db.collection(nameOfProject).findOne(keyword);
-
-//     if (result) {
-//     	console.log("success");
-//         // console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
-//         console.log(result);
-//     } else {
-//     	console.log("fail");
-//         // console.log(`No listings found with the name '${nameOfListing}'`);
-//     }
-// }
-
-async function dropUpdateSchema(client, nameOfProject) {
-    const result = await client.db("sample_airbnb").collection("listingsAndReviews")
-                        .updateOne({ name: nameOfListing }, { $set: updatedListing });
-    console.log(`${result.matchedCount} document(s) matched the query criteria.`);
-    console.log(`${result.modifiedCount} document(s) was/were updated.`);
-}
-
 const api = {
 	findbyschema: async(req, res) => {
-		var json = req.body;
-	  await mdb.collection('schema_reg').find(json).toArray(function (err, result) {    
-      if(result.length > 0) res.status(200).json({status:1,data:result, message:"success"})
-      else res.status(200).json({status:0, message:"Success but nothing"})
+	  var json = req.body;
+	  await db.collection('schema_reg').find(json).toArray(function (err, result) {    
+	      if(result.length > 0) res.status(200).json({success:true,data:result, message:"조회 성공"})
+	      else res.status(200).json({status:0, message:"검색 결과가 없습니다."})
     })
 	},
 	insert: async(req, res) => {
 		var json = req.body;
 		db.collection('schema_reg').insert(json, function (err,result){
-    	res.json(result)
+    	res.json({success:true,data:result})
 		})
 	},
 	create: async(req,res) => {
 		var json = req.body;
 		var validate_rule = JSON.parse(json.validate_rule);
 		await db.createCollection(json.schema_name, validate_rule, function(err, result){
-			if(!result) {res.status(200).json(err)}
+			if(err) {res.status(200).json(err);return false;}
+			res.json({success:true})
 		})
 	},
 	upload: async(req, res) => {
@@ -70,7 +44,8 @@ const api = {
 	},
 	validatelogslist: async(req, res) => {
 		var json = req.body;
-	 	 await db.collection('validate_logs').find(json, {projection:{_id:0}}).sort({_id:-1}).limit(20).toArray(function (err, result) {
+		var collectionName = 'validate_logs_'+project_name;
+	 	await db.collection(collectionName).find(json, {projection:{_id:0}}).sort({_id:-1}).limit(20).toArray(function (err, result) {
     	  res.status(200).json({data:result,success:true})
    	 })
 	},
@@ -120,8 +95,10 @@ const api = {
 				throw err
 			}
 		})
-		res.status(200).json({success:true,message:"saved",filepath:json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
-		// res.download("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv")
+		// res.status(200).json({success:true,message:"saved",filepath:json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
+		var test = "./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv";
+		console.log(test);
+		res.download(test);
 
 	},
 	overwrite: async(req, res) => {

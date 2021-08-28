@@ -9,13 +9,33 @@
     })
   }
 
-  var err_code = [
+  var data = [
     { 
-      "codeName":"48",
-      "message":"OverWrite? (기존 Schema는 보관됩니다)"
+      "code":"48",
+      "message":"중복된 스키마가 있습니다. 저장하겠습니까?"
     },
     { 
-      "codeName":"32",
+      "code":"32",
       "message":"잘못된 JSON 형식입니다."
     },
-  ];
+  ]; 
+
+  // input validation via JSON
+  function parse(str) {
+    try {
+      var json = JSON.parse(str);
+      return (typeof json === 'object');
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+// find value and get Key from json
+function getbycode(code) {
+  return data.filter(
+    function(data) {
+      return data.code == code }
+  );
+}
+

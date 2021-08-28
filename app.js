@@ -3,71 +3,53 @@ const express = require('express');
 const session = require('express-session');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
-const fs = require('fs');               
-const passport = require('passport');   
-const app = express();
-var flash = require('connect-flash');
+const flash = require('connect-flash');
 const mongoose = require('mongoose');
+const passport = require('passport');   
+const passportLocalMongoose = require('passport-local-mongoose');
+const indexRouter = require('./routes/index');
+const apiRouter = require('./routes/api');
+const usersRouter = require('./routes/users');
+const app = express();
 
-// mongodb
-const { mongodb } = require('mongodb');
+// mongodb -> mongoose
 const dbConfig = require('./db.config.js');
-
 // const uri = `mongodb://${dbConfig.USER}:${dbConfig.PASSWORD}@${dbConfig.HOST}:${dbConfig.PORT}/`;
-const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/`;    
-var MongoClient = require('mongodb').MongoClient, db;
+const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`;    
+mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true });
 
-MongoClient.connect(uri).then((client) => {
-  global.db = client.db(dbConfig.DB);
-    console.log("Connected to the database!");
-  })
-  .catch(err => {    
-    console.log("Cannot cconnect to the database!", err);
-    process.exit();
-});          
-
-// // connects our back end code with the database
-// mongoose.connect(uri, { useNewUrlParser: true });
-// global.mdb = mongoose.connection;
-// mdb.once('open', () => console.log('connected to the database'));
-// // checks if connection with the database is successful
-// mdb.on('error', console.error.bind(console, 'MongoDB connection error:'));
+global.db = mongoose.connection;
+db.once('open', () => console.log('connected to the database'));
+// checks if connection with the database is successful
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // cors 
 var corsOptions = {
-  origin: "http://localhost:8080"
+  origin: "http://localhost:8080",
+  credentials : true,  
 };
 app.use(cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-  })
-);
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+app.use(flash());
+// app.use(cookieParser());
+app.use(require("express-session")({
+    secret:"Miss white is my cat",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize()); // passport 구동
+app.use(passport.session()); // 세션 연결
 
-// PASSPORT SETUP 
-passport.serializeUser(function (user, done) {
-  done(null, user._id); // 세션 저장소에 id를 저장
-});
+require('./modules/passport');
 
-passport.deserializeUser(function (id, done) {
-  User.findOne({ _id: id }, (err, user) => {
-    done(null, user); // 세션 저장소에 저장된 id값을 DB에서 조회하여 req.user에 담음 
-  });
-});
 
-app.use(passport.initialize()); 
-app.use(passport.session());
-
-// express-ejs-la ㅖyout
+// express-ejs-layout
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts);
 app.set('layout extractScripts', true)
@@ -78,10 +60,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // bootstrap, Jquery
-const indexRouter = require('./routes/index');
-const apiRouter = require('./routes/api');
-const usersRouter = require('./routes/users');
-
 app.use('/stylesheets', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
 app.use('/javascripts', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
 app.use('/javascripts', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
