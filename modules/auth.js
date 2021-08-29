@@ -1,5 +1,5 @@
 const passport = require('../modules/passport');
-const User = require("../model/User");
+const User = require("../models/User");
 
 const signin = async (req, res) => {
   req.flash("test","reqflash");

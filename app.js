@@ -58,22 +58,29 @@ const pageTitle = {
   '/users/signup':'회원가입',
   '/analyzer':'다양성 검사',
   '/report':'리포트 출력',
-  '/result':'정확성 검사'
+  '/result':'정확성 검사',
+  '/users/forgot':'비밀번호 찾기'
   }
 app.use(function(req,res,next){
+    req.url ? res.locals.title = pageTitle[req.url] : res.locals.title="SSL";
     if(req.session.passport) {
+      res.locals.user = req.user;
       res.locals.currentUser = req.session.passport.user;
+      // res.locals.user = req.session.
       res.locals.isLogged = true;
     } else {
       res.locals.isLogged = false;
     }
-    // console.log(res.locals.currentUser);
-    // res.locals.success = req.session.flash.success;
-    // res.locals.error = req.;  
-    //since the db calls are asynchronous
     next();
 
 });
+
+app.use((req, res, next) => {
+  if (req.session && req.session.flash && req.session.flash.length > 0) {
+    req.session.flash = []
+  }
+  next()
+})
 
 // express-ejs-layout
 app.use(express.static(path.join(__dirname, 'public')));

@@ -9,6 +9,7 @@
             <div class="form-group"><input type="password" name="password" class="form-control" id="password" placeholder="Password"></div> 
             <div class="d-flex flex-row align-items-center justify-content-between">
               <a href="/users/signup">Sign Up</a>
+              <a href="/users/reset">Forgot Password</a>
               <button type="submit" class="btn btn-primary">Sign In</button>
             </div>
          </form>
@@ -17,4 +18,12 @@
     </div>
   </div>
 </div>
+<script type='text/javascript'>
+$(function(){
+  if($('#message .modal-content .alert').text().length > 0) {
+    messages($('#message .modal-content .alert').text());
+    $('#message .modal-content .alert').remove();
+  }
+});
+</script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/signin.css">

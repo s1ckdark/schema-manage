@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title><%=title%></title>
+    <title><%= title %></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/javascripts/bootstrap.bundle.min.js"></script>
     <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/util.js"></script>
+    <script src="/javascripts/message.js"></script>
     <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
@@ -15,7 +16,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse justify-content-between px-5 py-2" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item active">
           <a class="nav-link" href="/">홈</a>
@@ -62,7 +63,7 @@
   </main>
   <div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="message" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
+      <div class="modal-content text-break">
         <div class="modal-header">
           <h5 class="modal-title" id="validate_logs_Schema_name">Message</h5>
           <button type="button" class="modal-close" data-dismiss="modal" aria-label="Close">
@@ -70,9 +71,9 @@
           </button>
         </div>
         <div class="modal-body">      
-          <% if (typeof(message) != 'undefined') { %>
-           <h3><%- message %></h3>
-          <% } %>
+          <% if(typeof(message) != 'undefined') { %> 
+            <div class="alert"><%=message%></div>
+            <% } %>
         </div>
         <div class="modal-footer d-flex">
           <button type="button" class="modal-close btn btn-secondary" data-dismiss="modal">Close</button>
