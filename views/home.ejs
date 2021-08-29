@@ -1,8 +1,35 @@
 <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <% if(user){ %>
-    <p>You are currently logged in as <%= user.email %></p>
-  <% } else { %>
-    <p>You are currently not logged in. Plaese login or register...</p>
-    <% } %>
+<p>Welcome to <%= title %></p>
+<p>whoami <%=currentUser%></p>
+<section>
+    <hgroup><h1>스키마 조회</h1></hgroup>
+    <p>스키마 이름으로 저장된 스키마를 조회할 수 있다</p>
+    <ul>
+        <li>project name</li>
+        <li>schema name</li>
+        <li>validation rule</li>
+        <li>create date</li>
+    </ul>
+</section>
+<section>
+    <hgroup><h1>스키마 등록</h1></hgroup>
+    <p>스키마를 등록 할 수 있다.</p>
+    <ul>
+        <li>project name</li>
+        <li>schema name</li>
+        <li>validation rule</li>
+        <li>create date</li>
+    </ul>
+</section>
+<section>
+    <hgroup><h1>다양성 검사</h1></hgroup>
+    <p>스키마 검사 내역을 확인할 수 있다.</p>
+    <ul>
+        <li>project name</li>
+        <li>schema name</li>
+        <li>create date</li>
+    </ul>
+    <ul>
+        <li>
+</section>
 

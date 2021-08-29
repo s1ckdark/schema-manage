@@ -38,16 +38,42 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 // app.use(cookieParser());
+const oneDay = 1000 * 60 * 60 * 24;
 app.use(require("express-session")({
-    secret:"Miss white is my cat",
+    secret:"thisisschemamanager",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+     cookie: { maxAge: oneDay },
 }));
 app.use(passport.initialize()); // passport 구동
 app.use(passport.session()); // 세션 연결
 
 require('./modules/passport');
 
+const pageTitle = {
+  '/':"홈",
+  '/schmanager':'스키마조회',
+  '/schregister':'스키마등록',
+  '/users/signin':'로그인',
+  '/users/signup':'회원가입',
+  '/analyzer':'다양성 검사',
+  '/report':'리포트 출력',
+  '/result':'정확성 검사'
+  }
+app.use(function(req,res,next){
+    if(req.session.passport) {
+      res.locals.currentUser = req.session.passport.user;
+      res.locals.isLogged = true;
+    } else {
+      res.locals.isLogged = false;
+    }
+    // console.log(res.locals.currentUser);
+    // res.locals.success = req.session.flash.success;
+    // res.locals.error = req.;  
+    //since the db calls are asynchronous
+    next();
+
+});
 
 // express-ejs-layout
 app.use(express.static(path.join(__dirname, 'public')));

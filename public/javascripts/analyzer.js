@@ -49,7 +49,7 @@ $('#keyword').submit(function(event){
       success: function(res) {
       	pass_item_cnt = validate_logs_cnt - err_item_cnt;
       	error_item_ratio = err_item_cnt / validate_logs_cnt * 100;
-        if(res.success == true) {  
+        if(res.success == true && res.cnt !=0) {  
   		var list = "<tr class='text-center align-middle'>";
       		list += "<td class='total_cnt px-2 py-4 col-md-1'>"+res['data'][0]['total_cnt']+"</td>";
       		list += "<td class='err_file_cnt px-2 py-4 col-md-1'>"+res['data'][0]['err_file_cnt']+"</td>";
@@ -67,7 +67,9 @@ $('#keyword').submit(function(event){
         $('#validate_logs_sum .table_contents').append(list);
         $('#validate_logs .table_contents').append(list2);
         $('#result, #side').removeClass('invisible');
-        } else {
+        } else if(res.cnt ==0){
+        	messages("검색 결과가 없습니다");
+        } else if(res.success == false){
         	messages(res['message'])
         }
       },

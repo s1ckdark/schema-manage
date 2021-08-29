@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title><%=title%></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="/javascripts/bootstrap.bundle.min.js"></script>
     <script src="/javascripts/jquery.min.js"></script>
     <script src="/javascripts/util.js"></script>
-    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <body>
   <header class="navbar navbar-expand-lg navbar-light bg-light" id="navigation">
@@ -20,10 +21,10 @@
           <a class="nav-link" href="/">홈</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/manager">스키마 조회</a>
+          <a class="nav-link" href="/schmanager">스키마 조회</a>
         </li>            
         <li class="nav-item">
-          <a class="nav-link" href="/register">스키마 등록</a>
+          <a class="nav-link" href="/schregister">스키마 등록</a>
         </li>        
         <li class="nav-item">
           <a class="nav-link" href="/analyzer">다양성 검사</a>
@@ -35,10 +36,26 @@
           <a class="nav-link" href="/report">레포트 출력</a>
         </li>
       </ul>
+      <ul class="navbar-nav user-nav d-flex">
+        <% if (isLogged == false) { %>
+        <li class="navbar-nav">
+          <a class="nav-link" href="/users/signin">로그인</a>
+        </li>
+        <li class="navbar-nav">
+          <a class="nav-link" href="/users/signup">회원가입</a>
+        </li>
+        <% } else {%>
+        <li class="navbar-nav">
+          <a class="nav-link" href="/users/profile">프로필</a>
+        </li>
+        <li class="navbar-nav">
+          <a class="nav-link" href="/users/signout">로그아웃</a>
+        </li>
+        <% } %>
+      </ul>
     </div>
   </header>
   <main class="bd-content" role="main">
-
     <div class="container-fluid">
         <%- body %> 
     </div>
@@ -52,7 +69,11 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body"></div>
+        <div class="modal-body">      
+          <% if (typeof(message) != 'undefined') { %>
+           <h3><%- message %></h3>
+          <% } %>
+        </div>
         <div class="modal-footer d-flex">
           <button type="button" class="modal-close btn btn-secondary" data-dismiss="modal">Close</button>
         </div>

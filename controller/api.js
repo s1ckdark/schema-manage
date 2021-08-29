@@ -44,7 +44,8 @@ const api = {
 	},
 	validatelogslist: async(req, res) => {
 		var json = req.body;
-		var collectionName = 'validate_logs_'+project_name;
+		var collectionName = 'validate_logs_'+json.project_name;
+		console.log(collectionName);
 	 	await db.collection(collectionName).find(json, {projection:{_id:0}}).sort({_id:-1}).limit(20).toArray(function (err, result) {
     	  res.status(200).json({data:result,success:true})
    	 })
