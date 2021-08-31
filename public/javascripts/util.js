@@ -40,3 +40,18 @@ function getbycode(code) {
   );
 }
 
+const calculate = (validate_logs_cnt, err_item_cnt) => {
+        var pass_item_cnt = validate_logs_cnt - err_item_cnt;
+        var error_item_ratio = err_item_cnt / validate_logs_cnt * 100;
+        return {"total_item_cnt":validate_logs_cnt, "err_item_cnt":err_item_cnt, "pass_item_cnt":pass_item_cnt, "error_item_ratio": error_item_ratio.toFixed(6)}
+}
+
+const dateFormatter = (str) => {
+  var year = str.slice(0, 4);
+  var mon = str.slice(4, 6);
+  var day = str.slice(6, 8);
+  var hour = str.slice(8,10);
+  var min = str.slice(10,12);
+  var sec = str.slice(12,14);
+  return year+"-"+mon+"-"+day+" "+hour+":"+min+":"+sec;
+}

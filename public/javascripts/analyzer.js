@@ -1,10 +1,5 @@
 let validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0,info ={};
 
-const calculate = (validate_logs_cnt, err_item_cnt) => {
-      	var pass_item_cnt = validate_logs_cnt - err_item_cnt;
-      	var error_item_ratio = err_item_cnt / validate_logs_cnt * 100;
-      	return {"total_item_cnt":validate_logs_cnt, "err_item_cnt":err_item_cnt, "pass_item_cnt":pass_item_cnt, "error_item_ratio": error_item_ratio}
-}
 $('#keyword').submit(function(event){
     event.preventDefault();
 	$('.table_contents').empty();
@@ -65,7 +60,7 @@ $('#keyword').submit(function(event){
       		list2 += "<td class='total_item_cnt px-2 py-4 col-md-3'>"+validate_logs_cnt+"</td>";
       		list2 += "<td class='err_item_cnt px-2 py-4 col-md-3'>"+err_item_cnt+"</td>";
       		list2 += "<td class='pass_item_cnt px-2 py-4 col-md-3'>"+pass_item_cnt+"</td>";
-      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+error_item_ratio+"</td>";
+      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+error_item_ratio.toFixed(6)+"</td>";
 	        list2+= "</tr>";
 
         $('#validate_logs_sum .table_contents').append(list);
@@ -119,7 +114,7 @@ $('#listoferror > div').click(function(){
             list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['error_code']+"</td>";
             list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['error_name']+"</td>";
             list +="<td class='px-2 py-2 col-md-4 text-break text-left'>"+errList+"</td>";
-            list +="<td class='pl-2 py-2 col-md-1 text-break text-center'>"+res['create_dt']+"</td>"
+            list +="<td class='pl-2 py-2 col-md-1 text-break text-center'>"+dateFormatter(res['create_dt'])+"</td>"
             list +="</tr>";
 				})
 				$('#validate_logs_list .table_contents').append(list);
