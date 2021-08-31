@@ -11,7 +11,7 @@ const fs = require('fs');
 const api = {
 	findbyschema: async(req, res) => {
 	  var json = req.body;
-	  await db.collection('schema_reg').find(json).toArray(function (err, result) {    
+	  await db.collection('schema_reg').find(json).sort({'create_dt':-1}).toArray(function (err, result) {    
 	      if(result.length > 0) res.status(200).json({success:true,data:result, message:"조회 성공"})
 	      else res.status(200).json({status:0, message:"검색 결과가 없습니다."})
     })
@@ -37,15 +37,14 @@ const api = {
 	},
 	validatelogssum: async(req, res) => {
 	  var json = req.body;
-	  await db.collection('validate_logs_sum').find(json, {projection:{_id:0}}).sort({_id:-1}).limit(1).toArray(function (err, result) {
-      limit = result.slice(0,10);
-      res.status(200).json({data:limit,cnt:result.length,success: true})
+	  await db.collection('validate_logs_sum').find(json, {projection:{_id:0}}).sort({'create_dt':-1}).limit(1).toArray(function (err, result) {
+     	 console.log(result);
+     	 res.status(200).json({data:result,cnt:result.length,success: true})
     })
 	},
 	validatelogslist: async(req, res) => {
 		var json = req.body;
 		var collectionName = 'validate_logs_'+json.project_name;
-		console.log(collectionName);
 	 	await db.collection(collectionName).find(json, {projection:{_id:0}}).sort({_id:-1}).limit(20).toArray(function (err, result) {
     	  res.status(200).json({data:result,success:true})
    	 })
@@ -113,7 +112,8 @@ const api = {
 	},
 	distinct: async(req, res) => {
 		var json = req.body;
-		await db.collection('validate_logs').aggregate([{"$group" : {"_id":"$error_code", count:{$sum:1}}}]).toArray(function(err, result){
+		var collectionName = 'validate_logs_'+json.project_name;
+		await db.collection(collectionName).aggregate([{"$group" : {"_id":"$error_code", count:{$sum:1}}}]).toArray(function(err, result){
 			res.json({success:1, error_code_list:result})
 		})
 	}

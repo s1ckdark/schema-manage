@@ -1,5 +1,6 @@
   $('#uploadForm').change(function(event) {
       event.preventDefault();
+      $('#filename').empty();
       var json = new FormData($(this)[0]);
       $.ajax({
           type: "POST",
@@ -15,6 +16,7 @@
             editor1.clearSelection();
             editor2.setValue(res.jgs);
             editor2.clearSelection();
+            $('#filename').text($('#file')[0].files[0].name);
           },
           error: function (err) {
             console.log(err);

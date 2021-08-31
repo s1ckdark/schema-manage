@@ -14,7 +14,7 @@ const crypto = require("crypto");
 router.get('/signin', function(req, res) {
   console.log(req.session);
   if(req.session.flash) {
-    res.locals.message = req.session.flash.error
+    res.locals.message = req.session.flash.error[req.session.flash.error.length-1];
   } 
 	res.render('signin', {currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });

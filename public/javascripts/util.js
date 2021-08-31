@@ -6,6 +6,7 @@
     })
     $("#message .modal-close").click(function(){
       $("#message").modal('hide');
+      $("#message .modal-body h3").remove();
     })
   }
 

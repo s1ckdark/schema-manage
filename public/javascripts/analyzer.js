@@ -1,4 +1,4 @@
-let validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0;
+let validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0,info ={};
 
 const calculate = (validate_logs_cnt, err_item_cnt) => {
       	var pass_item_cnt = validate_logs_cnt - err_item_cnt;
@@ -8,12 +8,13 @@ const calculate = (validate_logs_cnt, err_item_cnt) => {
 $('#keyword').submit(function(event){
     event.preventDefault();
 	$('.table_contents').empty();
-	$('#side #listoferror > div').removeData();
+	$('#listoferror > div').removeData();
 	validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0;
     var json = {
-	  'project_name': '/^'+$('#keyword input[name="project_name"]').val()+'/',
-    'schema_name': '/^'+$('#keyword input[name="schema_name"]').val()+'/',
-    'create_dt': '/^'+$('#keyword input[name="create_dt"]').val()+'/',
+	  // 'project_name': '/^'+$('#keyword input[name="project_name"]').val()+'/',
+	  'project_name': $('#keyword input[name="project_name"]').val(),
+    'schema_name': {$regex: $('#keyword input[name="schema_name"]').val()},
+    'create_dt':  {$regex : $('#keyword input[name="create_dt"]').val()},
     }
     $.ajax({
 		type: 'POST',
@@ -27,7 +28,6 @@ $('#keyword').submit(function(event){
 			if(res.success == true) {
 				res['error_code_list'].map( res => {
 					validate_logs_cnt += res['count'];
-					console.log(res, res['_id'],res['count']);
 					$('#'+res['_id']).attr('data-cnt',res['count']);
 				})
 				$('#all').attr('data-cnt', validate_logs_cnt);
@@ -49,19 +49,23 @@ $('#keyword').submit(function(event){
       success: function(res) {
       	pass_item_cnt = validate_logs_cnt - err_item_cnt;
       	error_item_ratio = err_item_cnt / validate_logs_cnt * 100;
+      	info['project_name'] = res['data'][0]['project_name'];
+      	info['schema_name'] = res['data'][0]['schema_name'];
+      	$('#info_project_name h3').text(info['project_name']);
+				$('#info_schema_name h3').text(info['schema_name']);
         if(res.success == true && res.cnt !=0) {  
   		var list = "<tr class='text-center align-middle'>";
-      		list += "<td class='total_cnt px-2 py-4 col-md-1'>"+res['data'][0]['total_cnt']+"</td>";
-      		list += "<td class='err_file_cnt px-2 py-4 col-md-1'>"+res['data'][0]['err_file_cnt']+"</td>";
-      		list += "<td class='pass_file_cnt px-2 py-4 col-md-1'>"+res['data'][0]['pass_file_cnt']+"</td>";
-      		list += "<td class='error_ratio px-2 py-4 col-md-1'>"+res['data'][0]['err_ratio']+"</td>";
+      		list += "<td class='total_cnt px-2 py-4 col-md-3'>"+res['data'][0]['total_cnt']+"</td>";
+      		list += "<td class='err_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['err_file_cnt']+"</td>";
+      		list += "<td class='pass_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['pass_file_cnt']+"</td>";
+      		list += "<td class='error_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio']+"</td>";
 	        list+= "</tr>";
 
 	    var list2 = "<tr class='text-center align-middle'>";
-      		list2 += "<td class='total_item_cnt px-2 py-4 col-md-1'>"+validate_logs_cnt+"</td>";
-      		list2 += "<td class='err_item_cnt px-2 py-4 col-md-1'>"+err_item_cnt+"</td>";
-      		list2 += "<td class='pass_item_cnt px-2 py-4 col-md-1'>"+pass_item_cnt+"</td>";
-      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-1'>"+error_item_ratio+"</td>";
+      		list2 += "<td class='total_item_cnt px-2 py-4 col-md-3'>"+validate_logs_cnt+"</td>";
+      		list2 += "<td class='err_item_cnt px-2 py-4 col-md-3'>"+err_item_cnt+"</td>";
+      		list2 += "<td class='pass_item_cnt px-2 py-4 col-md-3'>"+pass_item_cnt+"</td>";
+      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+error_item_ratio+"</td>";
 	        list2+= "</tr>";
 
         $('#validate_logs_sum .table_contents').append(list);
@@ -90,8 +94,8 @@ $('#listoferror > div').click(function(){
 		$('.'+key).text(cal[key]);
 	}
 	var json = {
-	  'project_name': $('#keyword input[name="project_name"]').val(),
-      'schema_name': $('#keyword input[name="schema_name"]').val(),
+	  	'project_name': info['project_name'],
+      'schema_name': info['schema_name'],
       'error_code': errcode
     }
     $.ajax({
@@ -104,19 +108,19 @@ $('#listoferror > div').click(function(){
 		contentType: 'application/json',
 		success: function(res) {
 			if(res.success == true) {
-				var list ="";
-				console.log(res);
+				var errList ='',list='';
 				res['data'].map(res => {
-					list += "<tr class='text-center align-middle'>";
-				    list +="<td class='px-2 py-4 col-md-2'>"+res['json_file']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-1'>"+res['project_name']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-1'>"+res['schema_name']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-2'>"+res['error_field']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-1'>"+res['error_code']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-1'>"+res['error_name']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-3'>"+res['error_msg']+"</td>";
-                    list +="<td class='px-2 py-4 col-md-2'>"+res['create_dt']+"</td>"
-                    list +="</tr>";
+				res['error_msg'].map(ele => {errList += '<p>'+ele+'</p>'})
+					list += "<tr class='align-middle text-break'>";
+				    list +="<td class='pr-2 py-2 col-md-2 text-left'>"+res['json_file']+"</td>";
+            list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['project_name']+"</td>";
+            list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['schema_name']+"</td>";
+            list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['error_field']+"</td>";
+            list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['error_code']+"</td>";
+            list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['error_name']+"</td>";
+            list +="<td class='px-2 py-2 col-md-4 text-break text-left'>"+errList+"</td>";
+            list +="<td class='pl-2 py-2 col-md-1 text-break text-center'>"+res['create_dt']+"</td>"
+            list +="</tr>";
 				})
 				$('#validate_logs_list .table_contents').append(list);
 				$('#validate_logs_list').prepend("<button type='button' id='csv-btn' class='btn btn-secondary' onClick='exporttocsv(`"+errcode+"`)'>"+errcode+" CSV로 저장하기</button>");
