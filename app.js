@@ -16,9 +16,9 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 // mongodb -> mongoose
-const dbConfig = require('./db.config.js');
-// const uri = `mongodb://${dbConfig.USER}:${dbConfig.PASSWORD}@${dbConfig.HOST}:${dbConfig.PORT}/`;
-const uri = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`;    
+const config = require('./config/config.js');
+// const uri = `mongodb://${config.USER}:${config.PASSWORD}@${config.HOST}:${config.PORT}/`;
+const uri = `mongodb://${config.HOST}:${config.PORT}/${config.DB}`;    
 mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true });
 
 global.db = mongoose.connection;
