@@ -12,5 +12,6 @@ router.post("/validatelogslist", api.validatelogslist);
 router.post("/exporttocsv", api.exporttocsv);
 router.post("/overwrite", api.overwrite);
 router.post("/distinct", api.distinct);
+router.post("/getranks", api.getranks);
 
 module.exports = router;

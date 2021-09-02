@@ -53,14 +53,14 @@ $('#keyword').submit(function(event){
       		list += "<td class='total_cnt px-2 py-4 col-md-3'>"+res['data'][0]['total_cnt']+"</td>";
       		list += "<td class='err_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['err_file_cnt']+"</td>";
       		list += "<td class='pass_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['pass_file_cnt']+"</td>";
-      		list += "<td class='error_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio']+"</td>";
+      		list += "<td class='error_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio'].toFixed(6)+"</td>";
 	        list+= "</tr>";
 
 	    var list2 = "<tr class='text-center align-middle'>";
       		list2 += "<td class='total_item_cnt px-2 py-4 col-md-3'>"+validate_logs_cnt+"</td>";
       		list2 += "<td class='err_item_cnt px-2 py-4 col-md-3'>"+err_item_cnt+"</td>";
       		list2 += "<td class='pass_item_cnt px-2 py-4 col-md-3'>"+pass_item_cnt+"</td>";
-      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+error_item_ratio.toFixed(6)+"</td>";
+      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+error_item_ratio.toFixed(6)+"%</td>";
 	        list2+= "</tr>";
 
         $('#validate_logs_sum .table_contents').append(list);

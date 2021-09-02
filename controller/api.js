@@ -8,77 +8,101 @@ const util = require("util");
 const jsoncsv = require('json-csv');
 const fs = require('fs');
 
-let rankArray = [];
-function loadProject(json){
-    // querying and loading into a resultSet array
-    db.collection("schema_reg").find(json).sort({create_dt:-1}).toArray(function(err, result) {
-      // check for any error and throw it
-      if (err) throw err;
-      // populating the rank array with the marks
-      for (let i = 0; i < result.length; i++) {
-          rankArray[i] = result[i]['create_dt'];
-      }
-      // passing the rank array and the resultset to the giveRank() function
-      giveRank(rankArray,result);
-    });
-}
 
-function giveRank(arrayArg,resultArg){
-  // declaring and initilising variables
-    let rank = 1;
-    prev_rank = rank;
-    position = 0;
-    // displaying the headers in the console
-    console.log('\n-------OUR RESULTS------\n');
-    console.log('Schema Name | create_dt | Position\n');
-    // looping through the rank array
-    for (i = 0; i < arrayArg.length ; i ++) {
-            /*
-            If it is the first index, then automatically the position becomes 1.
-            */
-            if(i == 0) {
-                position = rank;
-            console.log (resultArg[i]['schema_name']+"\t"+arrayArg[i]+"\t"+position)+"\n";
-            
-            /*
-            if the value contained in `[i]` is not equal to `[i-1]`, increment the `rank` value and assign it to `position`.
-            The `prev_rank` is assigned the `rank` value.
-            */
-            } else if(arrayArg[i] != arrayArg[i-1]) {
-            rank ++;
-            position = rank;
-            prev_rank = rank;
-            console.log(resultArg[i]['schema_name']+"\t"+arrayArg[i]+"\t"+position)+"\n";
-            
-            /*
-            Otherwise, if the value contained in `[i]` is equal to `[i-1]`,
-            assign the position the value stored in the `prev_rank` variable then increment the value stored in the `rank` variable.*/
-            } else {
-                position = prev_rank;
-                rank ++;
-                console.log (resultArg[i]['schema_name']+"\t"+arrayArg[i]+"\t"+position)+"\n";
-            }
-    }
-}
+ let rankArray = [];
+		function loadProject(json){
+		    // querying and loading into a resultSet array
+		    db.collection("schema_reg").find(json).sort({create_dt:-1}).toArray(function(err, result) {
+		      // check for any error and throw it
+		      if (err) throw err;
+		      // populating the rank array with the marks
+		      for (let i = 0; i < result.length; i++) {
+		          rankArray[i] = result[i]['create_dt'];
+		      }
+		      // passing the rank array and the resultset to the giveRank() function
+		      console.log(giveRank(rankArray,result));
+		    });
+		}
+
+		function giveRank(arrayArg,resultArg){
+		  // declaring and initilising variables
+		    let rank = 1;
+		    prev_rank = rank;
+		    position = 0;
+		    let ranklist = [];
+		    for (i = 0; i < arrayArg.length ; i ++) {
+		            /*
+		            If it is the first index, then automatically the position becomes 1.
+		            */
+		            if(i == 0) {
+		                position = rank;
+		            	  var temp = {'schema_name':resultArg[i]['schema_name'], 'project_name':resultArg[i]['project_name'],'create_dt':arrayArg[i],rank:position};
+		            	  ranklist.push(temp);
+		            
+		            /*
+		            if the value contained in `[i]` is not equal to `[i-1]`, increment the `rank` value and assign it to `position`.
+		            The `prev_rank` is assigned the `rank` value.
+		            */
+		            } else if(arrayArg[i] != arrayArg[i-1]) {
+		            rank ++;
+		            position = rank;
+		            prev_rank = rank;
+            	  var temp = {'schema_name':resultArg[i]['schema_name'], 'project_name':resultArg[i]['project_name'],'create_dt':arrayArg[i],rank:position};
+            	  ranklist.push(temp);
+		            
+		            /*
+		            Otherwise, if the value contained in `[i]` is equal to `[i-1]`,
+		            assign the position the value stored in the `prev_rank` variable then increment the value stored in the `rank` variable.*/
+		            } else {
+		                position = prev_rank;
+		                rank ++;
+		            	  var temp = {'schema_name':resultArg[i]['schema_name'], 'project_name':resultArg[i]['project_name'],'create_dt':arrayArg[i],rank:position};
+		            	  ranklist.push(temp);
+		            }
+		    }
+		    console.log(ranklist);
+		   return ranklist;
+		}
+
 
 const api = {
 	findbyschema: async(req, res) => {
 	  var json = req.body;
-	  await db.collection("schema_reg").find(json).sort({create_dt:-1}).toArray(function(err, result) {
-      // check for any error and throw it
-      console.log(result);
-      if (err) throw err;
-      // populating the rank array with the marks
-      for (let i = 0; i < result.length; i++) {
-          rankArray[i] = result[i]['create_dt'];
-      }
-      // passing the rank array and the resultset to the giveRank() function
-      giveRank(rankArray,result);
+	  await db.collection('schema_reg').find(json).sort({'create_dt':-1}).toArray(function (err, result) {    
+	      if(result.length > 0) res.status(200).json({success:true,data:result, message:"조회 성공"})
+	      else res.status(200).json({status:0, message:"검색 결과가 없습니다."})
+    })
+	},
+	getranks: async(req, res) => {
+	  var json = req.body;
+		await db.collection("schema_reg").find({schema_name:json.schema_name, project_name:json.project_name}).sort({create_dt:-1}).toArray(function(err, result) {
+			var date = json.create_dt;
+    if (err) throw err;
+    // populating the rank array with the marks
+    for (let i = 0; i < result.length; i++) {
+        rankArray[i] = result[i]['create_dt'];
+    }
+    // passing the rank array and the resultset to the giveRank() function
+    var tmp = giveRank(rankArray,result);
+    var tmpRank = '';
+    tmp.map((item, index) => {
+    		if(item.create_dt == date ) {tmpRank = index; return false}
+    }
+    )
+    if(tmpRank === 0) {
+   	   db.collection("validate_logs_sum").find({schema_name:json.schema_name,project_name:json.project_name, create_dt:{$gt:json.create_dt}}).toArray(function(err, result){
+	      if(result.length > 0) res.status(200).json({success:true,data:result, message:"조회 성공",cnt:result.length})
+	      else res.status(200).json({status:0, message:"검색 결과가 없습니다.",cnt:0})
+   	   })
+    } else {
+    	 db.collection("validate_logs_sum").find({schema_name:json.schema_name,project_name:json.project_name, create_dt:{$gt:json.create_dt, $lt: tmp[tmpRank-1].create_dt}}).toArray(function(err, result){
+	      if(result.length > 0) res.status(200).json({success:true,data:result, message:"조회 성공",cnt:result.length})
+	      else res.status(200).json({status:0, message:"검색 결과가 없습니다.",cnt:0})
+   	   })
+
+    }
+
     });
-	  // await db.collection('schema_reg').find(json).sort({'create_dt':-1}).toArray(function (err, result) {    
-	  //     if(result.length > 0) res.status(200).json({success:true,data:result, message:"조회 성공"})
-	  //     else res.status(200).json({status:0, message:"검색 결과가 없습니다."})
-   //  })
 	},
 	insert: async(req, res) => {
 		var json = req.body;
@@ -102,7 +126,6 @@ const api = {
 	validatelogssum: async(req, res) => {
 	  var json = req.body;
 	  await db.collection('validate_logs_sum').find(json, {projection:{_id:0}}).sort({'create_dt':-1}).limit(1).toArray(function (err, result) {
-     	 console.log(result);
      	 res.status(200).json({data:result,cnt:result.length,success: true})
     })
 	},

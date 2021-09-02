@@ -17,8 +17,8 @@ const app = express();
 
 // mongodb -> mongoose
 const config = require('./config/config.js');
-// const uri = `mongodb://${config.USER}:${config.PASSWORD}@${config.HOST}:${config.PORT}/`;
-const uri = `mongodb://${config.HOST}:${config.PORT}/${config.DB}`;    
+const uri = `mongodb://${config.USER}:${config.PASSWORD}@${config.HOST}:${config.PORT}/`;
+// const uri = `mongodb://${config.HOST}:${config.PORT}/${config.DB}`;    
 mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true });
 
 global.db = mongoose.connection;

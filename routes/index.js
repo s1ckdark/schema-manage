@@ -17,7 +17,8 @@ router.get('/schmanager', function(req, res, next) {
 router.get('/schregister', connectEnsureLogin, function(req, res, next) {
 	res.render("schregister", { currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });
-router.get('/analyzer', connectEnsureLogin, function(req, res, next) {
+// router.get('/analyzer', connectEnsureLogin, function(req, res, next) {
+router.get('/analyzer', function(req, res, next) {
 	res.render("analyzer", {currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });
 router.get('/result', connectEnsureLogin, function(req, res, next) {
