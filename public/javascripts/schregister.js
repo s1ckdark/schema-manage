@@ -12,11 +12,15 @@
           cache: false,
           timeout: 600000,
           success: function (res) {
+            if(res.success == true) {
             editor1.setValue(res.ori);
             editor1.clearSelection();
             editor2.setValue(res.jgs);
             editor2.clearSelection();
             $('#filename').text($('#file')[0].files[0].name);
+          } else {
+            messages("잘못된 JSON 파일입니다")
+          }
           },
           error: function (err) {
             console.log(err);
@@ -115,6 +119,6 @@
   editor1.setTheme("ace/theme/chrome");
   var editor2 = loadEditor("text-area2");
   editor2.getSession().setMode("ace/mode/json");
-  editor2.setTheme("ace/theme/chrome");
+  editor2.setTheme("ace/theme/monokai");
 
  

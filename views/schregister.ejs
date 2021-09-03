@@ -1,15 +1,14 @@
-<div id="register" class="row">
-<div class="insert">
-  <div class="form-row">
-    <div class="form-group col-md-4">
-      <label for="projectName">Project Name</label>
+<div id="register" class="my-5">
+<div class="insert d-flex col-md-6 justify-content-around mx-auto">
+    <div class="form-group col-md-5">
+      <label for="projectName" class="mb-2">Project Name</label>
       <input type="text" class="form-control" name="project_name" id="projectName" placeholder="Project Name"/ >
     </div>
-  </div>
-  <div class="form-group col-md-4">
-    <label for="schemaName">Schema Name</label>
+  <div class="form-group col-md-5">
+    <label for="schemaName" class="mb-2">Schema Name</label>
     <input type="text" class="form-control" name="schema_name" id="schemaName" placeholder="Schema Name"/ >
   </div>
+</div>
   <div class="handleJson">
     <div class="template_selector my-3 me-3">
       <% var i=1;while(i < 4){ %>
@@ -37,10 +36,10 @@
       </div>
     </div>
   </div>
-  </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-json.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-chrome.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-monokai.min.js"></script>
 <script src="/javascripts/schregister.js"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/register.css">

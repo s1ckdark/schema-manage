@@ -28,7 +28,7 @@ $('.template-pop').click(function(){
           list+= "<td class='project_name px-2 py-4 col-md-2'>"+res.project_name+"</td>";
           list+= "<td class='schema_name px-2 py-4 col-md-2'>"+res.schema_name+"</td>";
           list+= "<td id='validation_rule_"+index+"' class='px-2 py-4 col-md-4'></td>";
-          list+= "<td class='create_dt px-2 py-4 col-md-2'>"+res.create_dt.replace( /\s|:/g, "")+"</td>";
+          list+= "<td class='create_dt px-2 py-4 col-md-2'>"+dateFormatter(res.create_dt)+"</td>";
           list+= "<td class='detailview px-2 py-4 col-md-1'><button type='button' class='btn btn-secondary' data-log_sum='"+res.schema_name+"' data-toggle='modal' data-target='#validate_logs_sum' onClick='detailview(`"+res.schema_name+"`,`"+res.project_name+"`,`"+res.create_dt+"`)'>이 력</button></td>";
           list+= "</tr>";
           $('.resultoffindbyschema .table_contents').append(list);
@@ -78,17 +78,16 @@ $('.template-pop').click(function(){
         if(res.cnt>0){
         res['data'].map( (res, index) => {
           index++;
-          var result = "<tr class='text-center'>";
+          var result = "<tr class='text-center align-middle'>";
           result+= "<td class='index px-2 py-4 col-md-1'>"+index+"</td>";
-          result+= "<td class='project_name px-2 py-4 col-md-3'>"+res.project_name+"</td>";
-          result+= "<td class='schema_name px-2 py-4 col-md-3'>"+res.schema_name+"</td>";
-          result+= "<td class='create_dt px-2 py-4 col-md-2'>"+res.create_dt.replace( /\s|:/g, "")+"</td>";
-          result+= "<td class='total_cnt px-2 py-4 col-md-3'>"+res.total_cnt+"</td>";
-          result+= "<td class='err_file_cnt px-2 py-4 col-md-3'>"+res.err_file_cnt+"</td>";
-          result+= "<td class='pass_file_cnt px-2 py-4 col-md-3'>"+res.pass_file_cnt+"</td>";
-          result+= "<td class='err_ratio px-2 py-4 col-md-3'>"+res.err_ratio+"</td>";
+          result+= "<td class='project_name px-2 py-4 col-md-2'>"+res.project_name+"</td>";
+          result+= "<td class='schema_name px-2 py-4 col-md-2'>"+res.schema_name+"</td>";
+          result+= "<td class='create_dt px-2 py-4 col-md-2'>"+dateFormatter(res.create_dt)+"</td>";
+          result+= "<td class='total_cnt px-2 py-4 col-md-1'>"+res.total_cnt+"</td>";
+          result+= "<td class='err_file_cnt px-2 py-4 col-md-1'>"+res.err_file_cnt+"</td>";
+          result+= "<td class='pass_file_cnt px-2 py-4 col-md-1'>"+res.pass_file_cnt+"</td>";
+          result+= "<td class='err_ratio px-2 py-4 col-md-2'>"+res.err_ratio.toFixed(6)+"%</td>";
           result+= "</tr>";
-          console.log(result);
           $('#validate_logs_sum .table_contents').append(result);
         })
         $('#validate_logs_sum .modal-title').text(json.schema_name);

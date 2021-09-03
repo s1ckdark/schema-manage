@@ -75,8 +75,8 @@ router.post('/reset', async(req, res) => {
     }
 
     const link = `http://127.0.0.1:8080/users/reset/${user._id}/${token.token}`;
-    // await sendEmail(user.email, "Password reset", link);
-    req.flash("message",link);
+    await sendEmail(user.email, "Password reset", link);
+    // req.flash("message",link);
     res.redirect('/users/reset');
     // res.send("password reset link sent to your email account");
   } catch (error) {

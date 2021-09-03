@@ -8,6 +8,15 @@ const util = require("util");
 const jsoncsv = require('json-csv');
 const fs = require('fs');
 
+// input validation via JSON
+  function parse(str) {
+    try {
+      var json = JSON.parse(str);
+      return (typeof json === 'object');
+    } catch (e) {
+      return false;
+    }
+  }
 
  let rankArray = [];
 		function loadProject(json){
@@ -119,8 +128,12 @@ const api = {
 	},
 	upload: async(req, res) => {
 		const ori_data = req.file.buffer.toString("utf8");
-		const jgs_data = JSON.stringify(jgs(JSON.parse(ori_data)),null,4);
-  	res.status(200).json({ori:ori_data,jgs:jgs_data})
+		if(parse(ori_data)){
+			const jgs_data = JSON.stringify(jgs(JSON.parse(ori_data)),null,4);
+			res.status(200).json({ori:ori_data,jgs:jgs_data,success:1})
+		} else {
+			res.status(200).json({success:0})
+		}
 	},
 	validatelogssum: async(req, res) => {
 	  var json = req.body;
