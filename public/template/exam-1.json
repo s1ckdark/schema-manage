@@ -1,0 +1,82 @@
+{
+"validator": {
+      "$jsonSchema": {
+         "bsonType": "object",
+         "required": [ "annotations", "info", "camera", "file_id", "filename", "parent_path", "last_modifier_id" ],
+         "properties": {
+            "annotations": {
+               "bsonType": "array",
+               "items": {
+                    "required": [ "id", "type", "attributes", "points", "label" ],
+                    "bsonType": "object",
+                    "properties": {
+                        "id":   {"bsonType": "string"},
+                        "type": {"enum": [ "bbox" ]},
+                        "points": {
+                            "bsonType": "array",
+                            "items": {
+                                "bsonType": "array",
+                                "items": {
+                                    "bsonType": "number"
+                                }
+                            }
+                        },
+                        "label":  {"bsonType": "string"},
+                        "attributes": {
+                            "bsonType": "object",
+                            "properties": {
+                                "주차시설물 분류": { "bsonType": "string"}
+                            }
+                        }
+                    }
+               }
+            },
+            "attributes": {"bsonType": "object", "properties":{}},
+            "file_id": {"bsonType": "string"},
+            "filename": {"bsonType": "string"},
+            "parent_path": {"bsonType": "string"},
+            "last_modifier_id": {"bsonType": "string"},
+            "info": {
+               "bsonType": "object",
+               "required": [ "date_created", "location_si", "location_gun", "location_gu", "weather", "time", "type" ],
+               "properties": {
+                  "date_created": {"bsonType": "string"},
+                  "location_si":  {"bsonType": "string"},
+                  "location_gun": {"bsonType": "string"},
+                  "location_gu":  {"bsonType": "string"},
+                  "weather":      {"bsonType": "string"},
+                  "time":         {"bsonType": "string"},
+                  "type":         {"bsonType": "string"}
+               }
+            },
+            "camera": {
+               "bsonType": "object",
+               "required": [ "type", "channel", "pixel", "angle", "resolution_width", "resolution_height", "framerate", "location_height", "location_distance"],
+               "properties": {
+                  "type": {"bsonType": "string"},
+                  "channel": {"bsonType": "string"}, 
+                  "pixel":   {"bsonType": "string"},
+                  "angle":   {"bsonType": "string"},
+                  "resolution_width":  {"bsonType": "string"},
+                  "resolution_height": {"bsonType": "string"},
+                  "framerate":         {"bsonType": "string"},
+                  "location_height":   {"bsonType": "string"},
+                  "location_distance": {"bsonType": "string"},
+                  "int_test": {"bsonType": "int", "minimum": 1, "maximum": 100},
+                  "class": {
+                     "bsonType": "object",
+                     "required": ["math","korean","english","science","history"],
+                     "properties": {
+                        "math": {"bsonType": "string"},
+                        "korean": {"bsonType": "string"},
+                        "english": {"bsonType": "string"},
+                        "science": {"bsonType": "string"},
+                        "history": {"bsonType": "string"}
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
