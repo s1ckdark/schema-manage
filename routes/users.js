@@ -9,13 +9,11 @@ const nodemailer = require('nodemailer');
 const Token = require("../models/token");
 const sendEmail = require("../modules/sendEmail");
 const crypto = require("crypto");
-
+const ObjectId = require('mongodb').ObjectId; 
 
 router.get('/signin', function(req, res) {
   console.log(req.session);
-  if(req.session.flash) {
-    res.locals.message = req.session.flash.error[req.session.flash.error.length-1];
-  } 
+if(req.session.flash) res.locals.message = req.session.flash.message[req.session.flash.message.length-1] ? req.session.flash.message[req.session.flash.message.length-1] : req.session.flash.error[req.session.flash.error.length-1]
 	res.render('signin', {currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });
 
@@ -55,7 +53,8 @@ router.get('/signout', function (req, res){
 });
 
 router.get('/reset', function(req, res) {
-  if(req.session.flash) res.locals.message = req.session.flash.message;
+  console.log(req.session);
+  if(req.session.flash) res.locals.message = req.session.flash.message[req.session.flash.message.length-1] ? req.session.flash.message[req.session.flash.message.length-1] : req.session.flash.error[req.session.flash.error.length-1]
   var resetValue = false
   res.render('reset',{reset:resetValue})
 });
@@ -64,7 +63,8 @@ router.post('/reset', async(req, res) => {
   try {
     var json = req.body.email;
     const user = await User.findOne({ email: req.body.email });
-    if (!user) { req.flash("message","user with given email doesn't exist");res.redirect(400,'/users/reset');}
+    if (user == null) { req.flash("message","존재하지 않는 메일주소 입니다");}
+    console.log(req.session);
     
     let token = await Token.findOne({ userId: user._id });
     if (!token) {
@@ -76,11 +76,10 @@ router.post('/reset', async(req, res) => {
 
     const link = `http://127.0.0.1:8080/users/reset/${user._id}/${token.token}`;
     await sendEmail(user.email, "Password reset", link);
-    // req.flash("message",link);
+    req.flash("message","패스워드 재설정 이메일이 발송 되었습니다");
     res.redirect('/users/reset');
-    // res.send("password reset link sent to your email account");
   } catch (error) {
-    req.flash("message",error);
+    // req.flash("message",error);
     res.redirect('/users/reset');
   }
 })
@@ -94,36 +93,38 @@ router.get("/reset/:userId/:token", async (req, res) => {
 });
 
 router.post("/reset/:userId/:token", async (req, res) => {
-  console.log(req.body);
     var url = 'http://'+req.host + '/users' + req.url;
+    
     try {
-        const user = await User.findById(req.params.userId);
-        if (!user) {req.flash("message","Invalid link or expired");res.redirect(400, url);}
+       let userId = new ObjectId(req.params.userId);
+        const user = await User.findOne({"_id":userId});
+        console.log(user);
+        if (user == null) {req.flash("message","Invalid link or expired");res.redirect("/users/signin");}
         const token = await Token.findOne({
             userId: user._id,
             token: req.params.token,
         });
-        if (!token) {req.flash("message","Invalid link or expired");res.redirect(400, url);}
-        if(req.body.password != req.body.password2) {req.flash("message","Password Not Matched");res.redirect(400, url);}
+        if(token == null) {req.flash("message","Invalid link or expired");res.redirect("/users/signin");}
+        if(req.body.password != req.body.password2) {req.flash("message","Password Not Matched");
         
         user.password = req.body.password;
-        console.log(user);
-        await User.findById(user._id, function(err, user) {
-           user.setPassword(req.body.password, function(err) {
+        user.setPassword(req.body.password, function(err) {
                 if (err) console.log(err);
               user.save(function(err) {
                   if (err) console.log(err)
                   else console.log("success");
               });
           });
-      });
         await user.save();
         await token.delete();
 
         req.flash("message","password reset sucessfully.");
-        res.redirect('/');
+        console.log(req.session);
+        res.redirect("/users/signin");
+        }
     } catch (error) {
        req.flash("message",error);
+       console.log(error);
     }
 });
 

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const createError = require('http-errors');
 const express = require('express');
 const session = require('express-session');
@@ -15,10 +16,11 @@ const apiRouter = require('./routes/api');
 const usersRouter = require('./routes/users');
 const app = express();
 
+
 // mongodb -> mongoose
-const config = require('./config/config.js');
-const uri = `mongodb://${config.USER}:${config.PASSWORD}@${config.HOST}:${config.PORT}/`;
-// const uri = `mongodb://${config.HOST}:${config.PORT}/${config.DB}`;    
+// const config = require('./config/config.js');
+const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/`;
+// const uri = `mongodb://${process.env.HOST}:${process.env.PORT}/${config.DB}`;    
 mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true });
 
 global.db = mongoose.connection;
