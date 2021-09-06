@@ -1,4 +1,15 @@
-  $('#uploadForm').change(function(event) {
+$('.template-pop').click(function(){
+	var tempfile = "/template/"+$(this).data("temp")+".json";
+	$.get(tempfile, function(response) {
+   	  var temp = response;
+	console.log(temp);
+	  editor1.setValue(temp)	
+	  editor1.clearSelection();
+	});
+})
+
+
+$('#uploadForm').change(function(event) {
       event.preventDefault();
       $('#filename').empty();
       var json = new FormData($(this)[0]);

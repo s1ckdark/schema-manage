@@ -188,15 +188,15 @@ const api = {
 		}
 		var list = await db.collection('validate_logs').find(json, {projection:{_id:0}}).sort({_id:-1});
 		let csv = await jsoncsv.buffered(list,options);
-		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv",  '\uFEFF' + csv, function(err, res){
+		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv",  '\uFEFF' + csv, {mode: '755' }, function(err, res){
 			if(err){
 				console.log(err);
 				throw err
 			}
 		})
-		// res.status(200).json({success:true,message:"saved",filepath:json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
-		var test = "./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv";
-		res.download(test);
+		res.status(200).json({success:true,message:"saved",filepath:json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
+		//var test = "./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv";
+		//res.download(test);
 
 	},
 	overwrite: async(req, res) => {
