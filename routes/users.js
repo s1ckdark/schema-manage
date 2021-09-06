@@ -12,8 +12,8 @@ const crypto = require("crypto");
 const ObjectId = require('mongodb').ObjectId; 
 
 router.get('/signin', function(req, res) {
-  console.log(req.session);
-if(req.session.flash) res.locals.message = req.session.flash.message[req.session.flash.message.length-1] ? req.session.flash.message[req.session.flash.message.length-1] : req.session.flash.error[req.session.flash.error.length-1]
+  console.log(req.session.flash);
+if(req.session.flash) res.locals.message = req.session.flash.error[req.session.flash.error.length-1];
 	res.render('signin', {currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });
 
