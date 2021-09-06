@@ -1,8 +1,7 @@
 $('.template-pop').click(function(){
-	var tempfile = "/template/"+$(this).data("temp")+".json";
+	var tempfile = "template/"+$(this).data("temp")+".json";
 	$.get(tempfile, function(response) {
-   	  var temp = response;
-	console.log(temp);
+    var temp = JSON.stringify(response, null, 2);
 	  editor1.setValue(temp)	
 	  editor1.clearSelection();
 	});
