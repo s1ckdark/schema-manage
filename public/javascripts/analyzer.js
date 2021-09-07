@@ -53,7 +53,7 @@ $('#keyword').submit(function(event){
       		list += "<td class='total_cnt px-2 py-4 col-md-3'>"+res['data'][0]['total_cnt']+"</td>";
       		list += "<td class='err_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['err_file_cnt']+"</td>";
       		list += "<td class='pass_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['pass_file_cnt']+"</td>";
-      		list += "<td class='error_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio'].toFixed(6)+"</td>";
+      		list += "<td class='error_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio'].toFixed(6)+"%</td>";
 	        list+= "</tr>";
 
 	    var list2 = "<tr class='text-center align-middle'>";
@@ -143,7 +143,8 @@ const exporttocsv = (errcode) => {
 		contentType: 'application/json',
 		success: function(res) {
 			if(res.success == true) {
-				 var popout = window.open('./download/'+res.filepath);
+				console.log(res.filepath);
+				 var popout = window.open('http://110.165.18.216:8080/temp/'+res.filepath+'.csv');
 			      window.setTimeout(function(){
 			         popout.close();
 			      }, 2000);

@@ -3,10 +3,12 @@
     $("#message").modal("show");
     $('#message').on('hidden.bs.modal', function (e) {
        $("#message .modal-body h3").remove();
+	$("#message .modal-footer .btn-overwrite").remove();
     })
     $("#message .modal-close").click(function(){
       $("#message").modal('hide');
       $("#message .modal-body h3").remove();
+      $("#message .modal-footer .btn-overwrite").remove();
     })
   }
 

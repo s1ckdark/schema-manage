@@ -74,7 +74,7 @@ router.post('/reset', async(req, res) => {
         }).save();
     }
 
-    const link = `http://127.0.0.1:8080/users/reset/${user._id}/${token.token}`;
+    const link = `http://110.165.18.216:8080/users/reset/${user._id}/${token.token}`;
     await sendEmail(user.email, "Password reset", link);
     req.flash("message","패스워드 재설정 이메일이 발송 되었습니다");
     res.redirect('/users/reset');
@@ -116,7 +116,8 @@ router.post("/reset/:userId/:token", async (req, res) => {
               });
           });
         await user.save();
-        await token.delete();
+        console.log(user, token);
+	await token.delete();
 
         req.flash("message","password reset sucessfully.");
         console.log(req.session);

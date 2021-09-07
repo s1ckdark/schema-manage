@@ -78,7 +78,7 @@ $('#uploadForm').change(function(event) {
               console.log(res);
               messages(getbycode(res.code)[0].message);
               if(res.code == 48){
-              $("#message .modal-footer").append("<button class='btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
+              $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
               }
               $('#overwrite').click(function(){
                 $.ajax({
@@ -91,10 +91,10 @@ $('#uploadForm').change(function(event) {
                   contentType: "application/json",
                   success: function(res) {
                     if(res.success == 1) {
-                      $('#message .modal-footer .btn-primary').remove();
+                      //$('#message .modal-footer .btn-primary').remove();
                       messages("완료하였습니다")
                     } else {
-                      $('#message .modal-footer .btn-primary').remove();
+                      //$('#message .modal-footer .btn-primary').remove();
                       messages("실패하였습니다.")
                     }
                   },
