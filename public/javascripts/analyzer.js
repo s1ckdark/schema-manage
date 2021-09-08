@@ -1,3 +1,10 @@
+$(function() {
+var tooltipTriggerList = [].slice.call($('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
+
 let validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0,info ={};
 
 $('#keyword').submit(function(event){
@@ -6,7 +13,6 @@ $('#keyword').submit(function(event){
 	$('#listoferror > div').removeData();
 	validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0;
     var json = {
-	  // 'project_name': '/^'+$('#keyword input[name="project_name"]').val()+'/',
 	  'project_name': $('#keyword input[name="project_name"]').val(),
     'schema_name': {$regex: $('#keyword input[name="schema_name"]').val()},
     'create_dt':  {$regex : $('#keyword input[name="create_dt"]').val()},
@@ -24,6 +30,7 @@ $('#keyword').submit(function(event){
 				res['error_code_list'].map( res => {
 					validate_logs_cnt += res['count'];
 					$('#'+res['_id']).attr('data-cnt',res['count']);
+					$('#'+res['_id']).children('.badge').text(res['count']);
 				})
 				$('#all').attr('data-cnt', validate_logs_cnt);
 			}
@@ -42,13 +49,16 @@ $('#keyword').submit(function(event){
       processData: false,
       contentType: 'application/json',
       success: function(res) {
+        if(res.success == true && res.cnt !=0) {  
       	pass_item_cnt = validate_logs_cnt - err_item_cnt;
       	error_item_ratio = err_item_cnt / validate_logs_cnt * 100;
       	info['project_name'] = res['data'][0]['project_name'];
       	info['schema_name'] = res['data'][0]['schema_name'];
+      	info['create_dt'] = res['data'][0]['create_dt'];
+      	console.log(info);
       	$('#info_project_name h3').text(info['project_name']);
 				$('#info_schema_name h3').text(info['schema_name']);
-        if(res.success == true && res.cnt !=0) {  
+
   		var list = "<tr class='text-center align-middle'>";
       		list += "<td class='total_cnt px-2 py-4 col-md-3'>"+res['data'][0]['total_cnt']+"</td>";
       		list += "<td class='err_file_cnt px-2 py-4 col-md-3'>"+res['data'][0]['err_file_cnt']+"</td>";
@@ -88,16 +98,12 @@ $('#listoferror > div').click(function(){
 	for(var key in cal){
 		$('.'+key).text(cal[key]);
 	}
-	var json = {
-	  	'project_name': info['project_name'],
-      'schema_name': info['schema_name'],
-      'error_code': errcode
-    }
+	info['error_code']=errcode;
     $.ajax({
 		type: 'POST',
 		url: '/api/validatelogslist',
 		dataType: 'json',
-		data: JSON.stringify(json),
+		data: JSON.stringify(info),
 		async: true,
 		processData: false,
 		contentType: 'application/json',
@@ -128,16 +134,17 @@ $('#listoferror > div').click(function(){
 })
 
 const exporttocsv = (errcode) => {
-	var json = {
-	  'project_name': $('#keyword input[name="project_name"]').val(),
-      'schema_name': $('#keyword input[name="schema_name"]').val(),
-      'error_code': errcode
-    }
+	// var json = {
+	//     'project_name': $('#keyword input[name="project_name"]').val(),
+ //      'schema_name': $('#keyword input[name="schema_name"]').val(),
+ //      'create_dt': $('#keyword input[name="schema_name"]').val(),
+ //      'error_code': errcode
+ //    }
 	$.ajax({
 		type: 'POST',
 		url: '/api/exporttocsv',
 		dataType: 'json',
-		data: JSON.stringify(json),
+		data: JSON.stringify(info),
 		async: true,
 		processData: false,
 		contentType: 'application/json',
@@ -156,3 +163,5 @@ const exporttocsv = (errcode) => {
 		}
 	});
 }
+
+});

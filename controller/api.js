@@ -194,9 +194,10 @@ const api = {
 				throw err
 			}
 		})
-		res.status(200).json({success:true,message:"saved",filepath:json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
+		var filepath = 'http://'+process.env.HOST+'/temp/'+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+'.csv';
+		// res.status(200).json({success:true,message:"saved",filepath:'http://'+process.env.HOST+'/temp/'+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
 		//var test = "./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv";
-		//res.download(test);
+		res.download(filepath);
 
 	},
 	overwrite: async(req, res) => {

@@ -13,6 +13,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 router.get('/signin', function(req, res) {
   console.log(req.session.flash);
+  console.log(res.locals.currentUser);
 if(req.session.flash) res.locals.message = req.session.flash.error[req.session.flash.error.length-1];
 	res.render('signin', {currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });
@@ -94,7 +95,6 @@ router.get("/reset/:userId/:token", async (req, res) => {
 
 router.post("/reset/:userId/:token", async (req, res) => {
     var url = 'http://'+req.host + '/users' + req.url;
-    
     try {
        let userId = new ObjectId(req.params.userId);
         const user = await User.findOne({"_id":userId});

@@ -10,18 +10,9 @@
   </div>
 </div>
   <div class="handleJson">
-    <div class="template_selector my-3 me-3">
-      <% var i=1;while(i < 4){ %>
-         <a class="btn template-pop btn-secondary" data-temp="exam-<%=i%>"><%=i%>번 템플릿</a>
-      <% i++; } %>
-    </div>
     <div class="jsonEditor">
-      <div class="editor">
-        <div class="textarea" id="text-area1"></div>
-        <div class="textarea" id="text-area2"></div>
-      </div>
-      <div class="bottom-btn d-flex flex-row justify-content-between">
-        <div class="uploadForm">
+      <div class="top-btn d-flex flex-row justify-content-between">
+        <div class="uploadForm d-flex">
           <form method="POST" enctype="multipart/form-data" id="uploadForm" class="d-flex align-items-center">
             <div class="form-group">
               <button id="uploadBtn" class="btn btn-primary">Upload a file</button>
@@ -29,11 +20,21 @@
             </div>
             <div id="filename" class="mx-4"></div>
           </form>
+          <div class="template_selector my-3 me-3">
+            <% var i=1;while(i < 4){ %>
+               <a class="btn template-pop btn-secondary" data-temp="exam-<%=i%>"><%=i%>번 템플릿</a>
+            <% i++; } %>
+          </div>
         </div>
         <div class="register">
-          <button class="btn btn-primary" id="registerbtn">등 록</button>
+          <button class="my-3 btn btn-primary" id="registerbtn">등 록</button>
         </div>
       </div>
+      <div class="editor">
+        <div class="textarea" id="text-area1"></div>
+        <div class="textarea" id="text-area2"></div>
+      </div>
+
     </div>
   </div>
 </div>

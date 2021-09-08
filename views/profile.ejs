@@ -2,11 +2,17 @@
   <div class="row justify-content-center">
   <div class="col-md-5">
     <div class="card">
-      <h2 class="card-title text-center">Log In</h2>
+      <h2 class="card-title text-center py-5 my-5">Welcome</h2>
         <div class="card-body py-md-4">
-          <%- user %>
+          <div id="userInfo">
+              <h3>{</h3>
+              <h3><%= user.email %></h3>
+              <h3><%= user.visited %></h3>
+              <h3>}</h3>
+
+          </div>
        </div>
-        <a href="/users/reset/ class="btn btn-secondary"">비밀번호 변경</a>
+        <a href="/users/reset/" class="btn btn-secondary"">비밀번호 변경</a>
       </div>
     </div>
   </div>

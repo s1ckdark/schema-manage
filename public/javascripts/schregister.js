@@ -65,7 +65,6 @@ $('#uploadForm').change(function(event) {
       success: function(res) {
         console.log(res);
         if(res.success == true) {
-          messages("schema-reg 등록 완료");
           $.ajax({
             type: 'POST',
             url: '/api/create',
@@ -91,10 +90,10 @@ $('#uploadForm').change(function(event) {
                   contentType: "application/json",
                   success: function(res) {
                     if(res.success == 1) {
-                      //$('#message .modal-footer .btn-primary').remove();
+                      $('#message .modal-footer .btn-primary').remove();
                       messages("완료하였습니다")
                     } else {
-                      //$('#message .modal-footer .btn-primary').remove();
+                      $('#message .modal-footer .btn-primary').remove();
                       messages("실패하였습니다.")
                     }
                   },
