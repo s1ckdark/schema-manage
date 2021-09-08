@@ -134,7 +134,9 @@ $('#listoferror > div').click(function(){
 				})
 				$('#validate_logs_list .table_contents').append(list);
 				$('#validate_logs_list .toggle span').click(function(){ $(this).parents().children('p').slideToggle("fast");})
+				if(res['data'].length>0){
 				$('#validate_logs_list').prepend("<button type='button' id='csv-btn' class='btn btn-secondary' onClick='exporttocsv(`"+errcode+"`)'>"+errcode+" CSV로 저장하기</button>");
+				}
 			}
 		},
 		error: function(err){

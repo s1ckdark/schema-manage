@@ -192,7 +192,8 @@ const api = {
 		var list = await db.collection(collectionName).find(json, {projection:{_id:0}}).sort({_id:-1});
 		let csv = await jsoncsv.buffered(list,options);
 
-		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+"_"+json['create_dt']+".csv",  '\uFEFF' + csv, function(err, res){
+		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+"_"+json['create_dt']+".csv",  '\uFEFF' + csv,{
+  mode: 0o777},function(err, res){
 			if(err){
 				console.log(err);
 				throw err
