@@ -155,6 +155,7 @@ $('#listoferror > div').click(function(){
 			if(res.success == true) {
 				window.location.assign("/download/"+res.filepath);
 				messages("저장 완료")
+			  setTimeout(() =>  location.href="/schregister", 2000);
 			}
 		},
 		error: function(err){
