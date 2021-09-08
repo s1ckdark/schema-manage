@@ -4,5 +4,15 @@
     background-color: #fff;
     color: #000;
     font-size: .8rem; }
+  #analyzer .active {
+    background-color: #fd7e14; }
+  #analyzer .toggle {
+    position: relative; }
+    #analyzer .toggle p {
+      display: none; }
+    #analyzer .toggle span {
+      position: absolute;
+      right: 0;
+      top: 20px; }
 
 /*# sourceMappingURL=analyzer.css.map */

@@ -5,4 +5,16 @@
 		color: #000;
 		font-size:.8rem;
 	}
+	.active {
+		background-color:#fd7e14;
+	}
+	.toggle {
+		position: relative;
+		p { display:none;}
+		span {
+			position: absolute;
+			right:0;
+			top: 20px;
+		}
+	}
 }

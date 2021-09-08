@@ -115,6 +115,7 @@ const api = {
 	insert: async(req, res) => {
 		var json = req.body;
 		db.collection('schema_reg').insert(json, function (err,result){
+				console.log("inser",result);
     	res.json({success:true,data:result})
 		})
 	},
@@ -122,7 +123,8 @@ const api = {
 		var json = req.body;
 		var validate_rule = JSON.parse(json.validate_rule);
 		await db.createCollection(json.schema_name, validate_rule, function(err, result){
-			if(err) {res.status(200).json(err);return false;}
+			if(err) {console.log(err);res.status(200).json(err);return false;}
+			console.log("create",result);
 			res.json({success:true})
 		})
 	},
@@ -177,8 +179,8 @@ const api = {
 		      label: 'error_name',
 		    },		    
 		    {
-		      name: 'errpr_msg',
-		      label: 'errpr_msg',
+		      name: 'error_msg',
+		      label: 'error_msg',
 		    },		    
 		    {
 		      name: 'create_dt',
@@ -186,19 +188,18 @@ const api = {
 		    },		    
 		  ],
 		}
-		var list = await db.collection('validate_logs').find(json, {projection:{_id:0}}).sort({_id:-1});
+		var collectionName = 'validate_logs_'+json.project_name;
+		var list = await db.collection(collectionName).find(json, {projection:{_id:0}}).sort({_id:-1});
 		let csv = await jsoncsv.buffered(list,options);
-		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv",  '\uFEFF' + csv, {mode: '755' }, function(err, res){
+
+		fs.writeFile("./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+"_"+json['create_dt']+".csv",  '\uFEFF' + csv, function(err, res){
 			if(err){
 				console.log(err);
 				throw err
 			}
 		})
-		var filepath = 'http://'+process.env.HOST+'/temp/'+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+'.csv';
-		// res.status(200).json({success:true,message:"saved",filepath:'http://'+process.env.HOST+'/temp/'+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']});
-		//var test = "./public/temp/"+json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+".csv";
-		res.download(filepath);
-
+		var filepath = json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+"_"+json['create_dt']+".csv";
+		res.status(200).json({success:true,message:"saved",filepath:filepath});
 	},
 	overwrite: async(req, res) => {
 		var json = req.body;
@@ -212,7 +213,7 @@ const api = {
 	distinct: async(req, res) => {
 		var json = req.body;
 		var collectionName = 'validate_logs_'+json.project_name;
-		await db.collection(collectionName).aggregate([{"$group" : {"_id":"$error_code", count:{$sum:1}}}]).toArray(function(err, result){
+		await db.collection(collectionName).aggregate([{"$match": {"create_dt": json.create_dt}}, {"$group" : {"_id":"$error_code", count:{$sum:1}}}]).toArray(function(err, result){
 			res.json({success:1, error_code_list:result})
 		})
 	}

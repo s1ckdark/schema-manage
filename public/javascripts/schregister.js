@@ -1,3 +1,4 @@
+
 $('.template-pop').click(function(){
 	var tempfile = "template/"+$(this).data("temp")+".json";
 	$.get(tempfile, function(response) {
@@ -45,72 +46,93 @@ $('#uploadForm').change(function(event) {
     var create_dt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace( /\s|:|-/g, ""); 
     var validation_rule = editor2.getValue();
 
+    if(project_name.length == 0 || schema_name.length == 0) {messages("입력항목을 입력해주세요");return false;}
     if(parse(validation_rule) == false) {messages("올바른 JSON 형식이 아닙니다");return false;} 
-
-    var insertData = {
+      
+    var info = {
       'project_name': project_name,
       'schema_name': schema_name,
       'create_dt': create_dt,
       'validate_rule': validation_rule
     }
-  
-      $.ajax({
+
+    $.ajax({
       type: 'POST',
-      url: '/api/insert',
+      url: '/api/create',
       dataType: 'json',
-      data: JSON.stringify(insertData),
+      data: JSON.stringify(info),
       async: true,
       processData: false,
       contentType: "application/json",
       success: function(res) {
-        console.log(res);
-        if(res.success == true) {
+        if(res.ok == "0") {
+        if(res.code){
+          if(res.code == 48) {
+          $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
+            $('#overwrite').click(function(){
+              $('#message .modal-content h3').remove();
+            $.ajax({
+              type: 'POST',
+              url: '/api/overwrite',
+              dataType: 'json',
+              data: JSON.stringify(info),
+              async: true,
+              processData: false,
+              contentType: "application/json",
+              success: function(res) {
+                if(res.success == 1) {
+                  $('#message .modal-footer .btn-primary').remove();
+                  $.ajax({
+                    type: 'POST',
+                    url: '/api/insert',
+                    dataType: 'json',
+                    data: JSON.stringify(info),
+                    async: true,
+                    processData: false,
+                    contentType: "application/json",
+                    success: function(res) {
+                      messages("완료하였습니다")
+                            setTimeout(() =>  location.href="/schregister", 2000);
+                    }, error: function(err){
+                      console.log(err);
+                    }
+                  })
+                } else {
+                  $('#message .modal-footer .btn-primary').remove();
+                  messages("실패하였습니다.")
+                }
+              },
+              error: function(err){
+                console.log(err);
+              }
+            });
+          })
+        }
+        messages(getbycode(res.code)[0].message) 
+      }else {
           $.ajax({
             type: 'POST',
-            url: '/api/create',
+            url: '/api/insert',
             dataType: 'json',
-            data: JSON.stringify(insertData),
+            data: JSON.stringify(info),
             async: true,
             processData: false,
             contentType: "application/json",
             success: function(res) {
-              console.log(res);
-              messages(getbycode(res.code)[0].message);
-              if(res.code == 48){
-              $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
+              if(res.success == true) {
+                messages("등록 완료 하였습니다");
+                setTimeout(() =>  location.href="/schregister", 2000);
               }
-              $('#overwrite').click(function(){
-                $.ajax({
-                  type: 'POST',
-                  url: '/api/overwrite',
-                  dataType: 'json',
-                  data: JSON.stringify(insertData),
-                  async: true,
-                  processData: false,
-                  contentType: "application/json",
-                  success: function(res) {
-                    if(res.success == 1) {
-                      $('#message .modal-footer .btn-primary').remove();
-                      messages("완료하였습니다")
-                    } else {
-                      $('#message .modal-footer .btn-primary').remove();
-                      messages("실패하였습니다.")
-                    }
-                  },
-                  error: function(err){
-                    console.log(err);
-                  }
-                });
-              })
+            },
+            error: function(err){
+              console.log(err);
             }
           })
-        }
-      },
-      error: function(err){
-        console.log(err);
       }
-    });
-  })
+    }
+  }
+})
+ })
 
   function loadEditor(container, readonly){
     var editor = ace.edit(container);

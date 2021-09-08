@@ -15,18 +15,19 @@
             </form>
         </div>
         <div id="result" class="invisible col-md-12">
-            <div id="info" class="d-flex justify-content-around col-md-4 m-5 mx-auto">
+            <div id="info" class="d-flex justify-content-around col-md-6 m-5 mx-auto">
                 <div id="info_project_name"><label>Project Name</label><h3></h3></div>
                 <div id="info_schema_name"><label>Schema Name</label><h3></h3></div>
+                <div id="info_create_dt"><label>Create_dt</label><h3></h3></div>
             </div>
             <div id="listoferror" class="mx-auto text-center my-5">
-                <div id="all" class="btn btn-primary mx-2 px-2">전 체</div>
-                <div id="er-01-01" class="btn btn-primary mx-2 px-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="파일 오류">er-01-01<span class="badge badge-light"></span></div>
-                <div id="er-02-01" class="btn btn-primary mx-2 px-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="필수 키 누락">er-02-01<span class="badge badge-light"></span></div>
-                <div id="er-03-01" class="btn btn-primary mx-2 px-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="value 유효값 누락">er-03-01<span class="badge badge-light"></span></div>
-                <div id="er-03-02" class="btn btn-primary mx-2 px-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="value 유효범위 오류">er-03-02<span class="badge badge-light"></span></div>
-                <div id="er-04-01" class="btn btn-primary mx-2 px-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="value 타입 오류">er-04-01<span class="badge badge-light"></span></div>
-                <div id="er-00-00" class="btn btn-primary mx-2 px-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="기타 오류">er-00-00<span class="badge badge-light"></span></div>
+                <div id="all" class="btn btn-primary mx-2 px-2 active">전 체</div>
+                <div id="er-01-01" class="btn btn-primary mx-2 px-2" aria-pressed="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="파일 오류 - 비정상적인 Json 파일로, 파일이 열리지 않는 경우">er-01-01<span class="badge badge-light"></span></div>
+                <div id="er-02-01" class="btn btn-primary mx-2 px-2" aria-pressed="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="필수 Key 오류 - 필수 Key가 없는 경우">er-02-01<span class="badge badge-light"></span></div>
+                <div id="er-03-01" class="btn btn-primary mx-2 px-2" aria-pressed="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="vValue 유효값 오류 - Value가 설정한 유효값이 아닌경우">er-03-01<span class="badge badge-light"></span></div>
+                <div id="er-03-02" class="btn btn-primary mx-2 px-2" aria-pressed="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Value 유효 범위 오류 (숫자 계열) - Value가 설정한 유효 범위를 벗어난 경우">er-03-02<span class="badge badge-light"></span></div>
+                <div id="er-04-01" class="btn btn-primary mx-2 px-2" aria-pressed="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Value 타입 오류 - Value의 타입이 틀린경우">er-04-01<span class="badge badge-light"></span></div>
+                <div id="er-00-00" class="btn btn-primary mx-2 px-2" aria-pressed="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="정의되지 않은 오류">er-00-00<span class="badge badge-light"></span></div>
             </div>
             <table id="validate_logs_sum" class="table table-hover col-md-12">
                 <thead class="thead-dark text-center">

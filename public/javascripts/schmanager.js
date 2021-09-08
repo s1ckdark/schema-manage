@@ -20,7 +20,6 @@ $('.template-pop').click(function(){
       success: function(res) {
         console.log(res);
         res.success == true ?
-
         res['data'].map( (res, index) => {
           index++;
           var list = "<tr class='text-center align-middle'>";
@@ -93,55 +92,14 @@ $('.template-pop').click(function(){
         $('#validate_logs_sum .modal-title').text(json.schema_name);
         $('#validate_logs_sum .modal-count').text(res.cnt+"건이 조회");
       } else {
-          messages("검색결과가 없습니다");
+           $('#validate_logs_sum .table_contents').append("<tr class='border-0'><td class='text-center align-middle m-5' colspan='9'><h3>검색결과가 없습니다</h3></td></tr>");
       }
       },
       error: function(err){
         console.log(err);
-        // location.href="/error";
       }
     });
-
-    // $.ajax({
-    //   type: 'POST',
-    //   url: '/api/validatelogssum',
-    //   dataType: 'json',
-    //   data: JSON.stringify(json),
-    //   async: true,
-    //   processData: false,
-    //   contentType: "application/json",
-    //   success: function(res) {
-    //     console.log(res);
-    //     var result ='';
-    //     if(res.cnt>0){
-    //     res['data'].map( (res, index) => {
-    //       index++;
-    //       var result = "<tr class='text-center'>";
-    //       result+= "<td class='index px-2 py-4 col-md-1'>"+index+"</td>";
-    //       result+= "<td class='project_name px-2 py-4 col-md-3'>"+res.project_name+"</td>";
-    //       result+= "<td class='schema_name px-2 py-4 col-md-3'>"+res.schema_name+"</td>";
-    //       result+= "<td class='create_dt px-2 py-4 col-md-2'>"+res.create_dt.replace( /\s|:/g, "")+"</td>";
-    //       result+= "<td class='total_cnt px-2 py-4 col-md-3'>"+res.total_cnt+"</td>";
-    //       result+= "<td class='err_file_cnt px-2 py-4 col-md-3'>"+res.err_file_cnt+"</td>";
-    //       result+= "<td class='pass_file_cnt px-2 py-4 col-md-3'>"+res.pass_file_cnt+"</td>";
-    //       result+= "<td class='err_ratio px-2 py-4 col-md-3'>"+res.err_ratio+"</td>";
-    //       result+= "</tr>";
-    //       $('#validate_logs_sum .table_contents').append(result);
-    //     })
-    //     $('#validate_logs_sum .modal-title').text(json.schema_name);
-    //     $('#validate_logs_sum .modal-count').text(res.cnt+"건이 조회");
-    //   } else {
-    //       // $('#validate_logs_sum .modal-title').text(json.schema_name);
-    //       // $('#validate_logs_sum .modal-body').append("<h3 class='text-center message'>검색결과가 없습니다</h3>");
-    //       messages("검색결과가 없습니다1");
-    //   }
-    //   },
-    //   error: function(err){
-    //     console.log(err);
-    //     // location.href="/error";
-    //   }
-    // });
-  }
+}
 
   
 

@@ -1,9 +1,9 @@
-  function messages(str) {
+  function messages(str, next) {
     $("#message .modal-body").append("<h3>"+str+"</h3>");
     $("#message").modal("show");
     $('#message').on('hidden.bs.modal', function (e) {
        $("#message .modal-body h3").remove();
-	$("#message .modal-footer .btn-overwrite").remove();
+	     $("#message .modal-footer .btn-overwrite").remove();
     })
     $("#message .modal-close").click(function(){
       $("#message").modal('hide');
@@ -12,16 +12,6 @@
     })
   }
 
-  var data = [
-    { 
-      "code":"48",
-      "message":"중복된 스키마가 있습니다. 저장하겠습니까?"
-    },
-    { 
-      "code":"32",
-      "message":"잘못된 JSON 형식입니다."
-    },
-  ]; 
 
   // input validation via JSON
   function parse(str) {
@@ -36,6 +26,20 @@
 
 // find value and get Key from json
 function getbycode(code) {
+  var data = [
+    { 
+      "code":"48",
+      "message":"중복된 스키마가 있습니다. 저장하겠습니까?"
+    },
+    { 
+      "code":"32",
+      "message":"잘못된 JSON 형식입니다."
+    },
+    { 
+      "code":"9",
+      "message":"잘못된 JSON 형식입니다."
+    },
+  ]; 
   return data.filter(
     function(data) {
       return data.code == code }

@@ -18,9 +18,8 @@ const app = express();
 
 
 // mongodb -> mongoose
-// const config = require('./config/config.js');
 const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/`;
-// const uri = `mongodb://${process.env.HOST}:${process.env.PORT}/${config.DB}`;    
+// const uri = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;    
 mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true });
 
 global.db = mongoose.connection;
@@ -68,7 +67,6 @@ app.use(function(req,res,next){
     if(req.session.passport) {
       res.locals.user = req.user;
       res.locals.currentUser = req.session.passport.user;
-      // res.locals.user = req.session.
       res.locals.isLogged = true;
     } else {
       res.locals.isLogged = false;
@@ -98,7 +96,7 @@ app.set('view engine', 'ejs');
 app.use('/stylesheets', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
 app.use('/javascripts', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
 app.use('/javascripts', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
-
+app.use('/temp', express.static(path.join(__dirname, 'public/temp')))
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/users', usersRouter);
