@@ -57,7 +57,7 @@ const pageTitle = {
   '/schregister':'스키마등록',
   '/users/signin':'로그인',
   '/users/signup':'회원가입',
-  '/analyzer':'다양성 검사',     res.json({success:true})
+  '/analyzer':'다양성 검사',    
   '/report':'리포트 출력',
   '/result':'정확성 검사',
   '/users/forgot':'비밀번호 찾기'
