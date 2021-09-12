@@ -80,7 +80,7 @@ $('#uploadForm').change(function(event) {
               processData: false,
               contentType: "application/json",
               success: function(res) {
-                if(res.success == 1) {
+                if(res.success == true) {
                   $('#message .modal-footer .btn-primary').remove();
                   $.ajax({
                     type: 'POST',
@@ -92,7 +92,7 @@ $('#uploadForm').change(function(event) {
                     contentType: "application/json",
                     success: function(res) {
                       messages("완료하였습니다")
-                            setTimeout(() =>  location.href="/schregister", 2000);
+                      // setTimeout(() =>  location.href="/schregister", 2000);
                     }, error: function(err){
                       console.log(err);
                     }
@@ -109,7 +109,27 @@ $('#uploadForm').change(function(event) {
           })
         }
         messages(getbycode(res.code)[0].message) 
-      }else {
+      } else {
+          $.ajax({
+            type: 'POST',
+            url: '/api/insert',
+            dataType: 'json',
+            data: JSON.stringify(info),
+            async: true,
+            processData: false,
+            contentType: "application/json",
+            success: function(res) {
+              if(res.success == true) {
+                messages("등록 완료 하였습니다");
+                // setTimeout(() =>  location.href="/schregister", 2000);
+              }
+            },
+            error: function(err){
+              console.log(err);
+            }
+          })
+      }
+    } else if(res.success == true){
           $.ajax({
             type: 'POST',
             url: '/api/insert',
@@ -129,7 +149,7 @@ $('#uploadForm').change(function(event) {
             }
           })
       }
-    }
+
   }
 })
  })

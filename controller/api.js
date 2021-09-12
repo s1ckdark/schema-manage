@@ -207,15 +207,16 @@ const api = {
 		await db.collection(json.schema_name).rename(json.schema_name+"_"+json.create_dt);
 		var validate_rule = JSON.parse(json.validate_rule);
 		await db.createCollection(json.schema_name, validate_rule, function(err, result){
-			if(!result) {res.status(200).json(err)}
-			res.json({success:1})
+			console.log(err, result);
+			if(!result) {res.status(200).json(err)} else {res.json({success:true})}
+
 		})
 	},
 	distinct: async(req, res) => {
 		var json = req.body;
 		var collectionName = 'validate_logs_'+json.project_name;
 		await db.collection(collectionName).aggregate([{"$match": {"create_dt": json.create_dt}}, {"$group" : {"_id":"$error_code", count:{$sum:1}}}]).toArray(function(err, result){
-			res.json({success:1, error_code_list:result})
+			res.json({success:true, error_code_list:result})
 		})
 	}
 }
