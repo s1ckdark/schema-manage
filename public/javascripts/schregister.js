@@ -65,71 +65,7 @@ $('#uploadForm').change(function(event) {
       processData: false,
       contentType: "application/json",
       success: function(res) {
-        if(res.ok == "0") {
-        if(res.code){
-          if(res.code == 48) {
-          $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
-            $('#overwrite').click(function(){
-              $('#message .modal-content h3').remove();
-            $.ajax({
-              type: 'POST',
-              url: '/api/overwrite',
-              dataType: 'json',
-              data: JSON.stringify(info),
-              async: true,
-              processData: false,
-              contentType: "application/json",
-              success: function(res) {
-                if(res.success == true) {
-                  $('#message .modal-footer .btn-primary').remove();
-                  $.ajax({
-                    type: 'POST',
-                    url: '/api/insert',
-                    dataType: 'json',
-                    data: JSON.stringify(info),
-                    async: true,
-                    processData: false,
-                    contentType: "application/json",
-                    success: function(res) {
-                      messages("완료하였습니다")
-                      // setTimeout(() =>  location.href="/schregister", 2000);
-                    }, error: function(err){
-                      console.log(err);
-                    }
-                  })
-                } else {
-                  $('#message .modal-footer .btn-primary').remove();
-                  messages("실패하였습니다.")
-                }
-              },
-              error: function(err){
-                console.log(err);
-              }
-            });
-          })
-        }
-        messages(getbycode(res.code)[0].message) 
-      } else {
-          $.ajax({
-            type: 'POST',
-            url: '/api/insert',
-            dataType: 'json',
-            data: JSON.stringify(info),
-            async: true,
-            processData: false,
-            contentType: "application/json",
-            success: function(res) {
-              if(res.success == true) {
-                messages("등록 완료 하였습니다");
-                // setTimeout(() =>  location.href="/schregister", 2000);
-              }
-            },
-            error: function(err){
-              console.log(err);
-            }
-          })
-      }
-    } else if(res.success == true){
+         if(res.success == true){
           $.ajax({
             type: 'POST',
             url: '/api/insert',
@@ -148,11 +84,83 @@ $('#uploadForm').change(function(event) {
               console.log(err);
             }
           })
-      }
-
-  }
+      } else if(res.code == "48") {
+           messages(getbycode(res.code)[0].message);
+           $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
+           $('#overwrite').click(function(){
+              $('#message .modal-content h3').remove();
+              $.ajax({
+                type: 'POST',
+                url: '/api/rename',
+                dataType: 'json',
+                data: JSON.stringify(info),
+                async: true,
+                processData: false,
+                contentType: "application/json",
+                success: function(res) {
+                  if(res.success == true) {
+                    // $('#message .modal-footer .btn-primary').remove();
+                  $.ajax({
+                    type: 'POST',
+                    url: '/api/create',
+                    dataType: 'json',
+                    data: JSON.stringify(info),
+                    async: true,
+                    processData: false,
+                    contentType: "application/json",
+                    success: function(res) {
+                      if(!res.code){
+                        $.ajax({
+                          type: 'POST',
+                          url: '/api/insert',
+                          dataType: 'json',
+                          data: JSON.stringify(info),
+                          async: true,
+                          processData: false,
+                          contentType: "application/json",
+                          success: function(res) {
+                            if(res.success==true){
+                              info['stat'] = true;
+                              $.ajax({
+                                type: 'POST',
+                                url: '/api/recover',
+                                dataType: 'json',
+                                data: JSON.stringify(info),
+                                async: true,
+                                processData: false,
+                                contentType: "application/json",
+                                success: function(res) {
+                                  if(res.success == true){
+                                    messages("완료하였습니다")
+                                    $('#message .modal-footer .btn-primary').remove();
+                                    // setTimeout(() =>  location.href="/schregister", 2000);
+                                  } else {
+                                      $('#message .modal-footer .btn-primary').remove();
+                                      messages(getbycode(res.code)[0].message) 
+                                  }
+                                  }, error: function(err){
+                                    console.log(err);
+                                  }
+                               })
+                           } else {
+                    $('#message .modal-footer .btn-primary').remove();
+                     messages(getbycode(res.code)[0].message) 
+                  }
+                },
+                error: function(err){
+                  console.log(err);
+                }
+              });
+          }
+        }
+        })
+        }} 
+      })
+      }) 
+    }
+}
 })
- })
+  })
 
   function loadEditor(container, readonly){
     var editor = ace.edit(container);

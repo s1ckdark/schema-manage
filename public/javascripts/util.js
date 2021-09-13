@@ -39,6 +39,10 @@ function getbycode(code) {
       "code":"9",
       "message":"잘못된 JSON 형식입니다."
     },
+    { 
+      "code":"2",
+      "message":"BadValue"
+    },
   ]; 
   return data.filter(
     function(data) {

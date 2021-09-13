@@ -107,7 +107,7 @@ $('#listoferror > div').click(function(){
 	for(var key in cal){
 		$('.'+key).text(cal[key]);
 	}
-	info['error_code']=errcode;
+	info['error_code']= errcode;
     $.ajax({
 		type: 'POST',
 		url: '/api/validatelogslist',
@@ -120,7 +120,9 @@ $('#listoferror > div').click(function(){
 			if(res.success == true) {
 				var errList ='',list='';
 				res['data'].map(res => {
-				res['error_msg'].map(ele => {errList += '<p>'+ele+'</p>'})
+				console.log(typeof(res['error_msg']));
+				if(typeof(res['error_msg']) == 'string') { errList += '<p>'+res['error_msg']+'</p>'} else {
+				res['error_msg'].map(ele => {errList += '<p>'+ele+'</p>'});}
 					list += "<tr class='align-middle text-break'>";
 				    list +="<td class='pr-2 py-2 col-md-2 text-left'>"+res['json_file']+"</td>";
             list +="<td class='px-2 py-2 col-md-1 text-break text-center'>"+res['project_name']+"</td>";

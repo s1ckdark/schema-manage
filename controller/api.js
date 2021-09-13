@@ -121,10 +121,9 @@ const api = {
 	},
 	create: async(req,res) => {
 		var json = req.body;
-		var validate_rule = JSON.parse(json.validate_rule);
+		var validate_rule = JSON.parse(parse(json.validate_rule));
 		await db.createCollection(json.schema_name, validate_rule, function(err, result){
-			if(err) {console.log(err);res.status(200).json(err);return false;}
-			console.log("create",result);
+			if(err) {res.status(200).json(err);return false;}
 			res.json({success:true})
 		})
 	},
@@ -145,6 +144,7 @@ const api = {
 	},
 	validatelogslist: async(req, res) => {
 		var json = req.body;
+		if(json.error_code =='all') delete json['error_code']
 		var collectionName = 'validate_logs_'+json.project_name;
 	 	await db.collection(collectionName).find(json, {projection:{_id:0}}).sort({_id:-1}).limit(10).toArray(function (err, result) {
     	  res.status(200).json({data:result,success:true})
@@ -152,6 +152,7 @@ const api = {
 	},
 	exporttocsv: async(req, res, next) => {
 		var json = req.body;
+		if(json.error_code =='all') delete json['error_code']
 		let options = {
 		  fields: [
 		    {
@@ -202,16 +203,47 @@ const api = {
 		var filepath = json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+"_"+json['create_dt']+".csv";
 		res.status(200).json({success:true,message:"saved",filepath:filepath});
 	},
-	overwrite: async(req, res) => {
+	rename: async(req,res) => {
 		var json = req.body;
-		await db.collection(json.schema_name).rename(json.schema_name+"_"+json.create_dt);
-		var validate_rule = JSON.parse(json.validate_rule);
-		await db.createCollection(json.schema_name, validate_rule, function(err, result){
-			console.log(err, result);
-			if(!result) {res.status(200).json(err)} else {res.json({success:true})}
-
+		await db.collection("temp").drop()
+		await db.collection(json.schema_name).rename("temp",function(err, collection) {
+			if(err) {res.json(err)} else {res.json({success:true})}
 		})
 	},
+	overwrite: async(req, res) => {
+		var json = req.body;
+		var validate_rule = JSON.parse(json.validate_rule);
+		await	db.createCollection(json.schema_name, validate_rule, function(err, collection) {
+			if(err) {res.json(err)} else {res.json({success:true})}
+		})
+
+		// await db.collection(json.schema_name).exists(function(err, result){
+		// 	console.log(result);
+		// 	console.log(err);
+		// })
+			// db.collection(json.schema_name).find("")
+			// res.json({success:collection})
+		// 	db.collection("temp").rename(json.schema_name, function(err, result){
+		// 		console.log("re-rename");
+		// 	// if(err) res.status(200).json(err);
+		// 	// res.json({success:true})
+		// 				if(err) console.log(err)
+		// 	console.log(result);
+		// });
+		// })
+
+	},
+	recover: async(req,res)=>{
+		var json = req.body;
+		if(json.stat == true) {
+			db.collection("temp").rename(json.schema_name+"_"+json.create_dt, function(err, result){
+ 						if(err) {res.json(err)} else {res.json({success:true})}
+		})} else {
+			db.collection("temp").rename(json.schema_name, function(err, result){
+ 						if(err) {res.json(err)} else {res.json({success:true})}
+		})
+		}
+},
 	distinct: async(req, res) => {
 		var json = req.body;
 		var collectionName = 'validate_logs_'+json.project_name;
