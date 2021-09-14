@@ -120,7 +120,6 @@ $('#listoferror > div').click(function(){
 			if(res.success == true) {
 				var errList ='',list='';
 				res['data'].map(res => {
-				console.log(typeof(res['error_msg']));
 				if(typeof(res['error_msg']) == 'string') { errList += '<p>'+res['error_msg']+'</p>'} else {
 				res['error_msg'].map(ele => {errList += '<p>'+ele+'</p>'});}
 					list += "<tr class='align-middle text-break'>";
