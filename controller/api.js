@@ -114,13 +114,13 @@ const api = {
 	},
 	insert: async(req, res) => {
 		var json = req.body;
-		db.collection('schema_reg').insert(json, function (err,result){
+		db.collection('schema_reg').insertOne(json, function (err,result){
     	res.json({success:true,data:result})
 		})
 	},
 	create: async(req,res) => {
 		var json = req.body;
-		var validate_rule = JSON.parse(parse(json.validate_rule));
+		var validate_rule = JSON.parse(json.validate_rule);
 		await db.createCollection(json.schema_name, validate_rule, function(err, result){
 			if(err) {res.status(200).json(err);return false;}
 			res.json({success:true})
@@ -205,6 +205,7 @@ const api = {
 	overwrite: async(req, res) => {
 		var json = req.body;
 		var validate_rule = JSON.parse(json.validate_rule);
+		console.log(validate_rule);
 		await db.collection(json.schema_name).rename(json.schema_name+"_"+json.create_dt);
 		await	db.createCollection(json.schema_name, validate_rule, function(err, result) {
 				if(err) {res.json(err)} else {res.json({success:true})}

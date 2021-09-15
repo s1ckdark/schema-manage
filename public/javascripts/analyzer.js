@@ -103,6 +103,7 @@ $('#listoferror > div').click(function(){
 	var error_item_cnt = $(this).data('cnt');
 	var errcode = $(this).attr('id');
 	var cal = calculate(total_item_cnt,validate_logs_cnt,error_item_cnt);
+	console.log(cal);
 	for(var key in cal){
 		$('.'+key).text(cal[key]);
 	}
