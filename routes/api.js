@@ -13,7 +13,5 @@ router.post("/exporttocsv", api.exporttocsv);
 router.post("/overwrite", api.overwrite);
 router.post("/distinct", api.distinct);
 router.post("/getranks", api.getranks);
-router.post("/rename", api.rename);
-router.post("/recover", api.recover);
 
 module.exports = router;

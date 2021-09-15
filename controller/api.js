@@ -115,7 +115,6 @@ const api = {
 	insert: async(req, res) => {
 		var json = req.body;
 		db.collection('schema_reg').insert(json, function (err,result){
-				console.log("inser",result);
     	res.json({success:true,data:result})
 		})
 	},
@@ -203,48 +202,14 @@ const api = {
 		var filepath = json['project_name']+"_"+json['schema_name']+"_"+json['error_code']+"_"+json['create_dt']+".csv";
 		res.status(200).json({success:true,message:"saved",filepath:filepath});
 	},
-	rename: async(req,res) => {
-		var json = req.body;
-		console.log("rename",json);
-		await db.collection(json.schema_name).rename("temp",function(err, collection) {
-			if(err) {res.json(err)} else {res.json({success:true})}
-		})
-	},
 	overwrite: async(req, res) => {
 		var json = req.body;
 		var validate_rule = JSON.parse(json.validate_rule);
-		await	db.createCollection(json.schema_name, validate_rule, function(err, collection) {
-			if(err) {res.json(err)} else {res.json({success:true})}
-		})
-
-		// await db.collection(json.schema_name).exists(function(err, result){
-		// 	console.log(result);
-		// 	console.log(err);
-		// })
-			// db.collection(json.schema_name).find("")
-			// res.json({success:collection})
-		// 	db.collection("temp").rename(json.schema_name, function(err, result){
-		// 		console.log("re-rename");
-		// 	// if(err) res.status(200).json(err);
-		// 	// res.json({success:true})
-		// 				if(err) console.log(err)
-		// 	console.log(result);
-		// });
-		// })
-
+		await db.collection(json.schema_name).rename(json.schema_name+"_"+json.create_dt);
+		await	db.createCollection(json.schema_name, validate_rule, function(err, result) {
+				if(err) {res.json(err)} else {res.json({success:true})}
+			})
 	},
-	recover: async(req,res)=>{
-		var json = req.body;
-		console.log("recover",json);
-		if(json.stat == true) {
-			db.collection("temp").rename(json.schema_name+"_"+json.create_dt, function(err, result){
- 						if(err) {res.json(err)} else {res.json({success:true})}
-		})} else {
-			db.collection("temp").rename(json.schema_name, function(err, result){
- 						if(err) {res.json(err)} else {res.json({success:true})}
-		})
-		}
-},
 	distinct: async(req, res) => {
 		var json = req.body;
 		var collectionName = 'validate_logs_'+json.project_name;

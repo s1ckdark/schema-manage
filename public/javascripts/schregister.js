@@ -89,20 +89,9 @@ $('#uploadForm').change(function(event) {
            $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
            $('#overwrite').click(function(){
               $('#message .modal-content h3').remove();
-              $.ajax({
-                type: 'POST',
-                url: '/api/rename',
-                dataType: 'json',
-                data: JSON.stringify(info),
-                async: true,
-                processData: false,
-                contentType: "application/json",
-                success: function(res) {
-                  if(res.success == true) {
-                    // $('#message .modal-footer .btn-primary').remove();
                   $.ajax({
                     type: 'POST',
-                    url: '/api/create',
+                    url: '/api/overwrite',
                     dataType: 'json',
                     data: JSON.stringify(info),
                     async: true,
@@ -120,17 +109,6 @@ $('#uploadForm').change(function(event) {
                           contentType: "application/json",
                           success: function(res) {
                             if(res.success==true){
-                              info['stat'] = true;
-                              $.ajax({
-                                type: 'POST',
-                                url: '/api/recover',
-                                dataType: 'json',
-                                data: JSON.stringify(info),
-                                async: true,
-                                processData: false,
-                                contentType: "application/json",
-                                success: function(res) {
-                                  if(res.success == true){
                                     messages("완료하였습니다")
                                     $('#message .modal-footer .btn-primary').remove();
                                     setTimeout(() =>  location.href="/schregister", 2000);
@@ -151,16 +129,13 @@ $('#uploadForm').change(function(event) {
                   console.log(err);
                 }
               });
-          }
+          })
         }
-        })
-        }} 
-      })
-      }) 
-    }
-}
-})
+      }
+    })
   })
+
+
 
   function loadEditor(container, readonly){
     var editor = ace.edit(container);
