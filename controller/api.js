@@ -205,7 +205,7 @@ const api = {
 	},
 	rename: async(req,res) => {
 		var json = req.body;
-		await db.collection("temp").drop()
+		console.log("rename",json);
 		await db.collection(json.schema_name).rename("temp",function(err, collection) {
 			if(err) {res.json(err)} else {res.json({success:true})}
 		})
@@ -235,6 +235,7 @@ const api = {
 	},
 	recover: async(req,res)=>{
 		var json = req.body;
+		console.log("recover",json);
 		if(json.stat == true) {
 			db.collection("temp").rename(json.schema_name+"_"+json.create_dt, function(err, result){
  						if(err) {res.json(err)} else {res.json({success:true})}

@@ -23,7 +23,15 @@
     }
   }
 
+const flatten = (obj, path = '') => {        
+    if (!(obj instanceof Object)) return {[path.replace(/\.$/g, '')]:obj};
 
+    return Object.keys(obj).reduce((output, key) => {
+        return obj instanceof Array ? 
+             {...output, ...flatten(obj[key], path +  '[' + key + '].')}:
+             {...output, ...flatten(obj[key], path + key + '.')};
+    }, {});
+}
 // find value and get Key from json
 function getbycode(code) {
   var data = [
@@ -50,8 +58,8 @@ function getbycode(code) {
   );
 }
 
-const calculate = (validate_logs_cnt, err_item_cnt) => {
-        var pass_item_cnt = validate_logs_cnt - err_item_cnt || 0;
+const calculate = (total_item_cnt, validate_logs_cnt, err_item_cnt) => {
+        var pass_item_cnt = total_item_cnt - err_item_cnt || 0;
         var error_item_ratio = err_item_cnt / validate_logs_cnt * 100 || 0;
         return {"total_item_cnt":validate_logs_cnt, "err_item_cnt":err_item_cnt, "pass_item_cnt":pass_item_cnt, "error_item_ratio": error_item_ratio.toFixed(6)}
 }

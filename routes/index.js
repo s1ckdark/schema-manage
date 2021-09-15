@@ -8,7 +8,7 @@ const connectEnsureLogin = require('connect-ensure-login').ensureLoggedIn('/user
 const auth = require('../modules/auth');
 const path = require('path');
 
-router.get('/', function(req, res, next) {
+router.get('/', connectEnsureLogin, function(req, res, next) {
 	res.render('home',{currentUser:res.locals.currentUser,isLogged:res.locals.isLogged});
 });
 router.get('/schmanager', connectEnsureLogin, function(req, res, next) {

@@ -18,7 +18,6 @@ $('.template-pop').click(function(){
       processData: false,
       contentType: 'application/json',
       success: function(res) {
-        console.log(res);
         res.success == true ?
         res['data'].map( (res, index) => {
           index++;
@@ -52,6 +51,8 @@ $('.template-pop').click(function(){
  const detailview = (schema_name, project_name,create_dt)=>{
     $('#validate_logs_sum .table_contents tr').remove();
     $('#validate_logs_sum .modal-body h3.message').remove();
+    $('#validate_logs_sum .modal-title').empty();
+    $('#validate_logs_sum .modal-count').empty();
     $('#validate_logs_sum').modal('show');
     $('.modal-close').click(function(){
     $('#validate_logs_sum').modal('hide');
@@ -73,7 +74,6 @@ $('.template-pop').click(function(){
       contentType: "application/json",
       success: function(res) {
         var result =''
-        console.log(res.cnt);
         if(res.cnt>0){
         res['data'].map( (res, index) => {
           index++;

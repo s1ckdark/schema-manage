@@ -40,15 +40,15 @@ $('#uploadForm').change(function(event) {
   })
 
    $('#registerbtn').click(function(){
-    
     var project_name = $(".insert input[name='project_name']").val();
     var schema_name = $(".insert input[name='schema_name']").val();
     var create_dt = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').replace( /\s|:|-/g, ""); 
     var validation_rule = editor2.getValue();
 
+    var required = /\"required\"[\s]?\:[\s]?\[\s+\]/g.test(validation_rule);
     if(project_name.length == 0 || schema_name.length == 0) {messages("입력항목을 입력해주세요");return false;}
-    if(parse(validation_rule) == false) {messages("올바른 JSON 형식이 아닙니다");return false;} 
-      
+    if(parse(validation_rule) === false || required === true) {messages("올바른 JSON 형식이 아닙니다");return false;} 
+  
     var info = {
       'project_name': project_name,
       'schema_name': schema_name,
@@ -84,7 +84,7 @@ $('#uploadForm').change(function(event) {
               console.log(err);
             }
           })
-      } else if(res.code == "48") {
+      } else if(res.code == "48") { // overwrite
            messages(getbycode(res.code)[0].message);
            $("#message .modal-footer").append("<button class='btn-overwrite btn btn-primary' type='button' id='overwrite'>YES (기존 Schema는 보관됩니다)</h3>");
            $('#overwrite').click(function(){
@@ -133,7 +133,7 @@ $('#uploadForm').change(function(event) {
                                   if(res.success == true){
                                     messages("완료하였습니다")
                                     $('#message .modal-footer .btn-primary').remove();
-                                    // setTimeout(() =>  location.href="/schregister", 2000);
+                                    setTimeout(() =>  location.href="/schregister", 2000);
                                   } else {
                                       $('#message .modal-footer .btn-primary').remove();
                                       messages(getbycode(res.code)[0].message) 
