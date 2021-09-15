@@ -49,11 +49,11 @@ function getbycode(code) {
   );
 }
 
-const calculate = (total_item_cnt, validate_logs_cnt, err_item_cnt) => {
-        var pass_item_cnt = total_item_cnt - err_item_cnt || 0;
+const calculate = (validate_logs_cnt, err_item_cnt) => {
+        var pass_item_cnt = validate_logs_cnt - err_item_cnt || 0;
         var err_item_cnt = err_item_cnt || 0;
         var error_item_ratio = err_item_cnt / validate_logs_cnt * 100 || 0;
-        return {"total_item_cnt":total_item_cnt, "err_item_cnt":err_item_cnt, "pass_item_cnt":pass_item_cnt, "error_item_ratio": error_item_ratio.toFixed(6)}
+        return {"total_item_cnt":validate_logs_cnt, "err_item_cnt":err_item_cnt, "pass_item_cnt":pass_item_cnt, "error_item_ratio": error_item_ratio.toFixed(6)}
 }
 
 const dateFormatter = (str) => {

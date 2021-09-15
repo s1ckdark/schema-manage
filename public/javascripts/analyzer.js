@@ -14,6 +14,7 @@ $('#keyword').submit(function(event){
 	$('#all').addClass('active');
 	$('.table_contents').empty();
 	$('#listoferror > div').removeData();
+	$('#validate_logs_list .table_contents').empty();
 	validate_logs_cnt=0, err_item_cnt=0,pass_item_cnt=0,error_item_ratio=0;
     var json = {
 	  'project_name': $('#keyword input[name="project_name"]').val(),
@@ -49,15 +50,7 @@ $('#keyword').submit(function(event){
       		list += "<td class='error_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio'].toFixed(6)+"%</td>";
 	        list += "</tr>";
 
-	    var list2 = "<tr class='text-center align-middle'>";
-      		list2 += "<td class='total_item_cnt px-2 py-4 col-md-3'>"+res['data'][0]['total_cnt']+"</td>";
-      		list2 += "<td class='err_item_cnt px-2 py-4 col-md-3'>"+res['data'][0]['err_file_cnt']+"</td>";
-      		list2 += "<td class='pass_item_cnt px-2 py-4 col-md-3'>"+res['data'][0]['pass_file_cnt']+"</td>";
-      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+res['data'][0]['err_ratio'].toFixed(6)+"%</td>";
-	        list2+= "</tr>";
-
         $('#validate_logs_sum .table_contents').append(list);
-        $('#validate_logs .table_contents').append(list2);
         $('#result, #side').removeClass('invisible');
             $.ajax({
 							type: 'POST',
@@ -74,6 +67,14 @@ $('#keyword').submit(function(event){
 										$('#'+res['_id']).attr('data-cnt',res['count']);
 										$('#'+res['_id']).children('.badge').text(res['count']);
 									})
+			            var cal = calculate(validate_logs_cnt,validate_logs_cnt);
+									var list2 = "<tr class='text-center align-middle'>";
+						      		list2 += "<td class='total_item_cnt px-2 py-4 col-md-3'>"+cal['total_item_cnt']+"</td>";
+						      		list2 += "<td class='err_item_cnt px-2 py-4 col-md-3'>"+cal['err_item_cnt']+"</td>";
+						      		list2 += "<td class='pass_item_cnt px-2 py-4 col-md-3'>"+cal['pass_item_cnt']+"</td>";
+						      		list2 += "<td class='error_item_ratio px-2 py-4 col-md-3'>"+cal['error_item_ratio']+"</td>";
+							        list2+= "</tr>";
+								 $('#validate_logs .table_contents').append(list2);
 									$('#all').attr('data-cnt', validate_logs_cnt);
 								}
 							},
@@ -102,8 +103,7 @@ $('#listoferror > div').click(function(){
 	$('#validate_logs_list #csv-btn').remove();
 	var error_item_cnt = $(this).data('cnt');
 	var errcode = $(this).attr('id');
-	var cal = calculate(total_item_cnt,validate_logs_cnt,error_item_cnt);
-	console.log(cal);
+	var cal = calculate(validate_logs_cnt,error_item_cnt);
 	for(var key in cal){
 		$('.'+key).text(cal[key]);
 	}
