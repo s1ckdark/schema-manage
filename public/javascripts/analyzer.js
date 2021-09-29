@@ -118,8 +118,9 @@ $('#listoferror > div').click(function(){
 		contentType: 'application/json',
 		success: function(res) {
 			if(res.success == true) {
-				var errList ='',list='';
+				var list='';
 				res['data'].map(res => {
+				var errList ='';
 				if(typeof(res['error_msg']) == 'string') { errList += '<p>'+res['error_msg']+'</p>'} else {
 				res['error_msg'].map(ele => {errList += '<p>'+ele+'</p>'});}
 						list += "<tr class='align-middle text-break'>";
